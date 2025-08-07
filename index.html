@@ -276,7 +276,7 @@
 
         .show-item {
             display: grid;
-            grid-template-columns: 120px 1fr auto;
+            grid-template-columns: 120px 1fr;
             gap: 30px;
             align-items: center;
             padding: 25px;
@@ -330,37 +330,6 @@
 
         .show-location {
             font-size: 0.6rem;
-            opacity: 0.7;
-            font-family: 'Press Start 2P', monospace;
-        }
-
-        .show-tickets {
-            padding: 10px 20px;
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
-            border: none;
-            border-radius: 5px;
-            color: var(--dark);
-            text-decoration: none;
-            font-weight: bold;
-            text-transform: uppercase;
-            font-size: 0.6rem;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-family: 'Press Start 2P', monospace;
-            display: inline-block;
-        }
-
-        .show-tickets:hover {
-            transform: scale(1.05);
-            box-shadow: 0 5px 20px rgba(255, 0, 102, 0.5);
-        }
-
-        .no-shows {
-            text-align: center;
-            padding: 60px 20px;
-            background: rgba(255, 255, 255, 0.02);
-            border-radius: 10px;
-            font-size: 0.8rem;
             opacity: 0.7;
             font-family: 'Press Start 2P', monospace;
         }
@@ -579,10 +548,6 @@
                 text-align: center;
             }
 
-            .show-tickets {
-                width: 100%;
-            }
-
             .bio-section {
                 flex-direction: column;
                 gap: 40px;
@@ -619,6 +584,7 @@
     </style>
 </head>
 <body>
+    <!-- Navigation -->
     <nav>
         <div class="nav-content">
             <div class="logo">MESSY</div>
@@ -632,6 +598,7 @@
         </div>
     </nav>
 
+    <!-- Hero Section -->
     <section class="hero">
         <div class="hero-bg"></div>
         <div class="hero-content">
@@ -639,32 +606,22 @@
         </div>
     </section>
 
+    <!-- Music Section -->
     <section id="music" class="music-section">
         <h2 class="section-title">Latest Tracks</h2>
 
         <div class="soundcloud-players">
             <div class="player-wrapper">
-                <div style="padding: 20px; text-align: center; background: rgba(255, 0, 102, 0.1); border-radius: 5px;">
-                    <div style="font-size: 0.8rem; color: var(--secondary); margin-bottom: 10px;">Track 1: WBMW Remix</div>
-                    <div style="font-size: 0.6rem; opacity: 0.7;">
-                        Add SoundCloud embed here:<br>
-                        Track ID: 2095691133
-                    </div>
-                </div>
+                <iframe width="100%" height="166" scrolling="no" frameborder="no" allow="autoplay" src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/2095691133&color=%23ff5500&auto_play=false&hide_related=false&show_comments=true&show_user=true&show_reposts=false&show_teaser=true"></iframe><div style="font-size: 10px; color: #cccccc;line-break: anywhere;word-break: normal;overflow: hidden;white-space: nowrap;text-overflow: ellipsis; font-family: Interstate,Lucida Grande,Lucida Sans Unicode,Lucida Sans,Garuda,Verdana,Tahoma,sans-serif;font-weight: 100;"><a href="https://soundcloud.com/m3ssyforever" title="Messy" target="_blank" style="color: #cccccc; text-decoration: none;">Messy</a> · <a href="https://soundcloud.com/m3ssyforever/wbmw-remix" title="WBMW Remix" target="_blank" style="color: #cccccc; text-decoration: none;">WBMW Remix</a></div>
             </div>
             
             <div class="player-wrapper">
-                <div style="padding: 20px; text-align: center; background: rgba(255, 0, 102, 0.1); border-radius: 5px;">
-                    <div style="font-size: 0.8rem; color: var(--secondary); margin-bottom: 10px;">Track 2: Truncatis Ingens</div>
-                    <div style="font-size: 0.6rem; opacity: 0.7;">
-                        Add SoundCloud embed here:<br>
-                        Track ID: 2097178929
-                    </div>
-                </div>
+                <iframe width="100%" height="166" scrolling="no" frameborder="no" allow="autoplay" src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/2097178929&color=%23ff5500&auto_play=false&hide_related=false&show_comments=true&show_user=true&show_reposts=false&show_teaser=true"></iframe><div style="font-size: 10px; color: #cccccc;line-break: anywhere;word-break: normal;overflow: hidden;white-space: nowrap;text-overflow: ellipsis; font-family: Interstate,Lucida Grande,Lucida Sans Unicode,Lucida Sans,Garuda,Verdana,Tahoma,sans-serif;font-weight: 100;"><a href="https://soundcloud.com/m3ssyforever" title="Messy" target="_blank" style="color: #cccccc; text-decoration: none;">Messy</a> · <a href="https://soundcloud.com/m3ssyforever/truncatis-ingens" title="Truncatis Ingens" target="_blank" style="color: #cccccc; text-decoration: none;">Truncatis Ingens</a></div>
             </div>
         </div>
     </section>
 
+    <!-- Shows Section -->
     <section id="shows" class="shows-section">
         <h2 class="section-title">Upcoming Shows</h2>
         <div class="shows-list">
@@ -673,25 +630,34 @@
                     AUG 23
                 </div>
                 <div class="show-details">
-                    <div class="show-venue">Domino</div>
-                    <div class="show-location">New Orleans, LA (Chore Boys) - Benefit for Reproductive Rights</div>
+                    <div class="show-venue">Chore Boys - Domino</div>
+                    <div class="show-location">New Orleans, LA - Benefit for Reproductive Rights</div>
                 </div>
-                <a href="#" class="show-tickets">TICKETS</a>
             </div>
-            
+
             <div class="show-item">
                 <div class="show-date">
                     AUG 29
                 </div>
                 <div class="show-details">
-                    <div class="show-venue">No Dice</div>
-                    <div class="show-location">New Orleans, LA w/ guest Pell</div>
+                    <div class="show-venue">Chore Boys - No Dice w/ guest Pell</div>
+                    <div class="show-location">New Orleans, LA</div>
                 </div>
-                <a href="#" class="show-tickets">TICKETS</a>
+            </div>
+            
+            <div class="show-item">
+                <div class="show-date">
+                    OCT 03
+                </div>
+                <div class="show-details">
+                    <div class="show-venue">Chore Boys - Fete Du Void</div>
+                    <div class="show-location">Oakdale, LA</div>
+                </div>
             </div>
         </div>
     </section>
 
+    <!-- Bio Section -->
     <section id="bio" class="bio-section">
         <h2 class="section-title">ABOUT MESSY</h2>
         <div class="bio-container">
@@ -711,33 +677,36 @@
         </div>
     </section>
 
+    <!-- Projects Section -->
     <section id="projects" class="projects-section">
         <h2 class="section-title">Projects</h2>
         <div class="projects-grid">
             <div class="project-card">
-                <h3 class="project-title">Late Night Sessions</h3>
-                <p class="project-description">Monthly radio show featuring underground electronic music from around the globe.</p>
+                <h3 class="project-title">
+                    <a href="https://www.instagram.com/choreboys.official" target="_blank" style="text-decoration: none; color: var(--secondary);">Chore Boys</a>
+                </h3>
+                <p class="project-description">Live remixing insanity with <a href="https://www.instagram.com/rustylazer" target="_blank" style="text-decoration: underline; color: var(--light);">Rusty Lazer</a> and Messy.</p>
             </div>
             <div class="project-card">
-                <h3 class="project-title">Warehouse Collective</h3>
-                <p class="project-description">Curating immersive audio-visual experiences in unconventional spaces.</p>
-            </div>
-            <div class="project-card">
-                <h3 class="project-title">Remix Lab</h3>
-                <p class="project-description">Collaborative project reimagining classic tracks with contemporary production.</p>
+                <h3 class="project-title">
+                    <a href="https://everything-forever.com" target="_blank" style="text-decoration: none; color: var(--secondary);">Everything Forever</a>
+                </h3>
+                <p class="project-description">Festival installations, karaoke raves, weddings, strange sonic experiences, and oh so much more, with Ethan Kiermaier and <a href="https://www.instagram.com/jengoma/" target="_blank" style="text-decoration: underline; color: var(--light);">Showtime Goma</a>.</p>
             </div>
         </div>
     </section>
 
+    <!-- Social Links -->
     <section class="social-section">
         <h2 class="section-title">Connect</h2>
         <div class="social-links">
-            <a href="https://soundcloud.com/YOUR_PROFILE" target="_blank" class="social-link">SoundCloud</a>
-            <a href="https://instagram.com/YOUR_PROFILE" target="_blank" class="social-link">Instagram</a>
+            <a href="https://soundcloud.com/m3ssyforever" target="_blank" class="social-link">SoundCloud</a>
+            <a href="https://www.instagram.com/m3ssy.forever/" target="_blank" class="social-link">Instagram</a>
             <a href="https://hearthis.at/YOUR_PROFILE" target="_blank" class="social-link">HearThis</a>
         </div>
     </section>
 
+    <!-- Footer -->
     <footer id="contact">
         <p class="footer-text">© 2025 MESSY • Booking: m3ssy.forever@gmail.com</p>
     </footer>
