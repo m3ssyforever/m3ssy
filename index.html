@@ -325,9 +325,7 @@
         .show-details {
             display: flex;
             flex-direction: column;
-            /* Added line-height to fix spacing within multiline text */
             line-height: 1.5; 
-            /* Decreased the gap slightly, now that line-height is handled */
             gap: 10px;
         }
 
@@ -341,7 +339,6 @@
             font-size: 0.6rem;
             opacity: 0.7;
             font-family: 'Press Start 2P', monospace;
-            /* Added a slight top margin to ensure separation */
             margin-top: 5px;
         }
         
@@ -525,25 +522,10 @@
             transition: all 0.3s ease;
             cursor: pointer;
             position: relative;
-            overflow: hidden;
+            /* Removed overflow: hidden */
         }
 
-        .project-card::after {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            width: 0;
-            height: 0;
-            background: radial-gradient(circle, rgba(255, 255, 255, 0.2), transparent);
-            transition: all 0.5s ease;
-            transform: translate(-50%, -50%);
-        }
-
-        .project-card:hover::after {
-            width: 300px;
-            height: 300px;
-        }
+        /* Removed ::after pseudo-element */
 
         .project-card:hover {
             transform: translateY(-10px) rotateZ(-1deg);
@@ -832,7 +814,7 @@
                 <h3 class="project-title">
                     <a href="https://www.instagram.com/choreboys.official" target="_blank" style="text-decoration: underline; color: var(--secondary);">Chore Boys</a>
                 </h3>
-                <p class="project-description">Live remixing mayhem with <a href="https://www.instagram.com/rustylazer" target="_blank" style="text-decoration: underline; color: var(--light);">Rusty Lazer</a> and Messy.</p>
+                <p class="project-description">Live remixing insanity with <a href="https://www.instagram.com/rustylazer" target="_blank" style="text-decoration: underline; color: var(--light);">Rusty Lazer</a> and Messy.</p>
             </div>
             <div class="project-card">
                 <h3 class="project-title">
