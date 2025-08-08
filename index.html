@@ -101,7 +101,7 @@
             position: absolute;
             width: 300%;
             height: 300%;
-            background:
+            background: 
                 radial-gradient(circle at 10% 20%, #ff0066 0%, transparent 40%),
                 radial-gradient(circle at 80% 80%, #00ff88 0%, transparent 40%),
                 radial-gradient(circle at 40% 40%, #ffff00 0%, transparent 50%),
@@ -122,10 +122,10 @@
             position: absolute;
             width: 100%;
             height: 100%;
-            background:
-                conic-gradient(from 0deg at 30% 30%,
+            background: 
+                conic-gradient(from 0deg at 30% 30%, 
                     #ff0066, #ff00ff, #0066ff, #00ffff, #00ff88, #88ff00, #ffff00, #ff8800, #ff0066),
-                conic-gradient(from 180deg at 70% 70%,
+                conic-gradient(from 180deg at 70% 70%, 
                     #00ff88, #00ffff, #ff00ff, #ff0066, #ff8800, #ffff00, #88ff00, #00ff88);
             animation: rotate 15s linear infinite reverse;
             opacity: 0.5;
@@ -141,20 +141,20 @@
         }
 
         @keyframes colorShift {
-            0%, 100% {
-                filter: blur(40px) contrast(1.5) saturate(1.5) hue-rotate(0deg);
+            0%, 100% { 
+                filter: blur(40px) contrast(1.5) saturate(1.5) hue-rotate(0deg); 
             }
-            20% {
-                filter: blur(60px) contrast(2) saturate(2) hue-rotate(90deg);
+            20% { 
+                filter: blur(60px) contrast(2) saturate(2) hue-rotate(90deg); 
             }
-            40% {
-                filter: blur(30px) contrast(1.8) saturate(1.8) hue-rotate(180deg);
+            40% { 
+                filter: blur(30px) contrast(1.8) saturate(1.8) hue-rotate(180deg); 
             }
-            60% {
-                filter: blur(50px) contrast(1.6) saturate(2.5) hue-rotate(270deg);
+            60% { 
+                filter: blur(50px) contrast(1.6) saturate(2.5) hue-rotate(270deg); 
             }
-            80% {
-                filter: blur(45px) contrast(2.2) saturate(1.7) hue-rotate(360deg);
+            80% { 
+                filter: blur(45px) contrast(2.2) saturate(1.7) hue-rotate(360deg); 
             }
         }
 
@@ -333,6 +333,92 @@
             opacity: 0.7;
             font-family: 'Press Start 2P', monospace;
         }
+        
+        /* Newsletter Section */
+        .newsletter-section {
+            padding: 100px 50px;
+            max-width: 800px;
+            margin: 0 auto;
+            text-align: center;
+        }
+        
+        .newsletter-form {
+            margin-top: 30px;
+            display: flex;
+            justify-content: center;
+            flex-direction: column;
+            gap: 20px;
+        }
+        
+        .newsletter-input {
+            width: 100%;
+            max-width: 400px;
+            padding: 15px 20px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 5px;
+            color: var(--light);
+            font-family: 'Press Start 2P', monospace;
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
+            outline: none;
+            margin: 0 auto;
+        }
+        
+        .newsletter-input:focus {
+            border-color: var(--secondary);
+            box-shadow: 0 0 10px rgba(0, 255, 136, 0.5);
+        }
+        
+        .newsletter-submit {
+            width: 100%;
+            max-width: 200px;
+            padding: 15px 20px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            border: none;
+            border-radius: 5px;
+            color: var(--dark);
+            text-decoration: none;
+            font-weight: bold;
+            text-transform: uppercase;
+            font-size: 0.7rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Press Start 2P', monospace;
+            margin: 0 auto;
+            display: block;
+        }
+        
+        .newsletter-submit:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 20px rgba(255, 0, 102, 0.5);
+        }
+
+        .message-box {
+            display: none;
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 5px;
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .message-box.success {
+            display: block;
+            background-color: rgba(0, 255, 136, 0.1);
+            border: 1px solid var(--secondary);
+            color: var(--secondary);
+        }
+
+        .message-box.error {
+            display: block;
+            background-color: rgba(255, 0, 102, 0.1);
+            border: 1px solid var(--primary);
+            color: var(--primary);
+        }
 
         /* Bio Section */
         .bio-section {
@@ -385,17 +471,17 @@
             animation: glitch 3s infinite;
         }
 
+        /* Updated bio-text styling */
         .bio-columns {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 30px;
+            display: block; /* Changed to a block element to remove column layout */
         }
-
+        
         .bio-text {
-            font-size: 0.7rem;
+            font-size: 0.8rem;
             line-height: 2;
             opacity: 0.9;
             font-family: 'Press Start 2P', monospace;
+            text-align: justify;
         }
 
         /* Projects Section */
@@ -457,6 +543,26 @@
             font-size: 0.6rem;
             font-family: 'Press Start 2P', monospace;
         }
+        
+        .project-title a {
+            text-decoration: underline;
+            color: var(--secondary);
+            transition: color 0.3s ease;
+        }
+
+        .project-title a:hover {
+            color: var(--primary);
+        }
+
+        .project-description a {
+            text-decoration: underline;
+            color: var(--light);
+            transition: color 0.3s ease;
+        }
+        
+        .project-description a:hover {
+            color: var(--secondary);
+        }
 
         /* Social Links */
         .social-section {
@@ -495,7 +601,7 @@
             width: 100%;
             height: 100%;
             background: linear-gradient(90deg, var(--primary), var(--secondary));
-            transition: left 0.3s ease;
+            transition: left 0.5s ease;
             z-index: -1;
         }
 
@@ -580,6 +686,14 @@
             .bio-text {
                 font-size: 0.6rem;
             }
+            
+            .newsletter-input {
+                width: 100%;
+            }
+            
+            .newsletter-submit {
+                width: 100%;
+            }
         }
     </style>
 </head>
@@ -661,17 +775,16 @@
     <section id="bio" class="bio-section">
         <h2 class="section-title">ABOUT MESSY</h2>
         <div class="bio-container">
+            <!-- Updated image source to the correct GitHub URL -->
             <div class="bio-image">
-                <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='500'%3E%3Crect width='400' height='500' fill='%23333'/%3E%3Ctext x='50%25' y='50%25' text-anchor='middle' dy='.3em' fill='%23666' font-family='monospace' font-size='14'%3E[Your DJ Photo Here]%3C/text%3E%3C/svg%3E" alt="DJ Messy">
+                <img src="https://raw.githubusercontent.com/m3ssyforever/m3ssy/refs/heads/main/cc_messy.png" onerror="this.onerror=null;this.src='https://placehold.co/400x500/333333/666666?text=Image+Not+Found';" alt="DJ Messy">
             </div>
             <div class="bio-content">
+                <!-- Bio text is now a single column, bigger, and justified -->
                 <div class="bio-columns">
-                    <div class="bio-text">
-                        Bringing chaos to the dancefloor since 2015. Known for eclectic sets that blur the lines between house, techno, and experimental electronic music. From underground warehouse parties to festival main stages, MESSY creates sonic journeys that push boundaries.
-                    </div>
-                    <div class="bio-text">
-                        Based in New Orleans, MESSY draws inspiration from the city's rich musical heritage while pushing forward into uncharted electronic territories. Every set is a unique experience, weaving together unexpected genres and creating moments of pure dance floor magic.
-                    </div>
+                    <p class="bio-text">
+                        Messy is a DJ and event producer based in New Orleans, Louisana. He is half of the DJ duo Chore Boys, and one third of the event production company Everything Forever. He loves to party.
+                    </p>
                 </div>
             </div>
         </div>
@@ -683,17 +796,28 @@
         <div class="projects-grid">
             <div class="project-card">
                 <h3 class="project-title">
-                    <a href="https://www.instagram.com/choreboys.official" target="_blank" style="text-decoration: none; color: var(--secondary);">Chore Boys</a>
+                    <a href="https://www.instagram.com/choreboys.official" target="_blank" style="text-decoration: underline; color: var(--secondary);">Chore Boys</a>
                 </h3>
                 <p class="project-description">Live remixing insanity with <a href="https://www.instagram.com/rustylazer" target="_blank" style="text-decoration: underline; color: var(--light);">Rusty Lazer</a> and Messy.</p>
             </div>
             <div class="project-card">
                 <h3 class="project-title">
-                    <a href="https://everything-forever.com" target="_blank" style="text-decoration: none; color: var(--secondary);">Everything Forever</a>
+                    <a href="https://everything-forever.com" target="_blank" style="text-decoration: underline; color: var(--secondary);">Everything Forever</a>
                 </h3>
                 <p class="project-description">Festival installations, karaoke raves, weddings, strange sonic experiences, and oh so much more, with Ethan Kiermaier and <a href="https://www.instagram.com/jengoma/" target="_blank" style="text-decoration: underline; color: var(--light);">Showtime Goma</a>.</p>
             </div>
         </div>
+    </section>
+    
+    <!-- Newsletter Section -->
+    <section class="newsletter-section">
+        <h2 class="section-title">Stay Updated</h2>
+        <p class="project-description">Join the newsletter to stay up to date on new mixes, shows, and projects.</p>
+        <form id="newsletter-form" class="newsletter-form">
+            <input type="email" id="newsletter-email" placeholder="YOUR EMAIL ADDRESS" class="newsletter-input" required />
+            <button type="submit" id="newsletter-submit" class="newsletter-submit">Join</button>
+        </form>
+        <div id="message-box" class="message-box"></div>
     </section>
 
     <!-- Social Links -->
@@ -751,6 +875,62 @@
 
         document.querySelectorAll('.project-card, .player-wrapper').forEach(el => {
             observer.observe(el);
+        });
+
+        // Newsletter form submission logic
+        const form = document.getElementById('newsletter-form');
+        const emailInput = document.getElementById('newsletter-email');
+        const messageBox = document.getElementById('message-box');
+
+        // Function to display a message to the user
+        function showMessage(message, type) {
+            messageBox.textContent = message;
+            messageBox.className = 'message-box';
+            if (type) {
+                messageBox.classList.add(type);
+            }
+        }
+        
+        // Asynchronous function to handle API subscription
+        async function subscribeToNewsletter(email) {
+            console.log("Attempting to subscribe with email:", email);
+            
+            // Your API URL
+            const API_URL = "https://connect.mailerlite.com/api/subscribers";
+            // The JWT token provided by the user
+            const JWT_TOKEN = "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiI0IiwianRpIjoiYWM3MjUzOThjNDU3NmE5OGZhZTFhN2QwMzIzMTllNjg0M2JmMzM0OTY4MmQ0N2U1NmZmNjZiYjIwOWVmNjQyZmM1NmFiZDk1ZDhhMWQwYWYiLCJpYXQiOjE3NTQ2MjM4ODguOTA0Mzg2LCJuYmYiOjE3NTQ2MjM4ODguOTA0Mzg4LCJleHAiOjQ5MTAyOTc0ODguODk5OTUsInN1YiI6IjE3MzYxNjQiLCJzY29wZXMiOltdfQ.J1GvrCFXzDXlKFi_sJdVBWWCnEMUrsL5e8Fc2yBH8XdOIWGRSmU106T6CAuui9hWuet5_CfA9k6Totscl2quWAKlW32lW2Ee58uK0SY_972iL9g5blPgsten7TwSQRU_q4Jvm9UQftme7i7XKffSg6KaUXRG3VN_TZ5vmRUgupRzYi2_Yg_e_n82MhvpCClOT0Vc6OOBNfwemFFXy0vvZzDZK9ErJQFA-Bxd1U5G3FHkurVFEg5oNDrtgC1CcfKGHvlm2g1aCq3rqPDFsToMHilDSnWiLii-LR_nC54iKsUvc-yjWgoy95hHQR03mttvmCV2NlET0H4VcjJ5c0EtGWYVG5ZaNiNHBoOIAECBOQZcgccOPsOkSHEDXfDEsifeMi7lLGvaRlp4x5rmLlhG2tJAvq4FfZWP7ycvAPSR03M9oH8z4CmZps3VHMJIut9l5zWykUvnEK_a7XbwWYnqJxij8Fn-p96eyXQBBk1FOIA-eT9yhkbzGVldJYHzHsd86bg30AWAsqLF1cxEyT0COIYx1DIl1DVwCu61dAc0h734lVkL8mb9J4LTuSHo9-KWtxlrlxqb4WCa-arOmoRwpvGNOPC05mCgwmls_VCER4ioItQQu6pRXjzx9PgTr9e0yerehYglXOfpFKRQF6nn1JCIzew2CVWszrmopXuA_w";
+
+            try {
+                const response = await fetch(API_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${JWT_TOKEN}`
+                    },
+                    body: JSON.stringify({ email: email })
+                });
+
+                if (response.ok) {
+                    showMessage("Thanks for subscribing! Check your email for a confirmation.", "success");
+                    emailInput.value = ''; // Clear the input field on success
+                } else {
+                    const errorData = await response.json();
+                    throw new Error(errorData.message || "Failed to subscribe. Please try again.");
+                }
+            } catch (error) {
+                console.error("Subscription error:", error);
+                showMessage(error.message, "error");
+            }
+        }
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const email = emailInput.value;
+            
+            if (email) {
+                showMessage("Subscribing...", "idle");
+                await subscribeToNewsletter(email);
+            }
         });
     </script>
 </body>
