@@ -32,7 +32,7 @@
             top: 0;
             width: 100%;
             padding: 30px 50px;
-            z-index: 1000;
+            z-index: 10; /* Lower z-index so other sections can scroll over it */
             mix-blend-mode: difference;
         }
 
@@ -192,11 +192,14 @@
             }
         }
 
-        /* Music Section */
+        /* Music Section - Updated styling for the scroll effect */
         .music-section {
             padding: 100px 50px;
             max-width: 1400px;
             margin: 0 auto;
+            position: relative;
+            z-index: 20;
+            background-color: var(--dark); /* Added a solid background to hide the nav bar */
         }
 
         .section-title {
@@ -268,6 +271,9 @@
             padding: 100px 50px;
             max-width: 1200px;
             margin: 0 auto;
+            position: relative;
+            z-index: 20; /* Added a solid background to hide the nav bar */
+            background-color: var(--dark);
         }
 
         .shows-list {
@@ -340,6 +346,9 @@
             max-width: 800px;
             margin: 0 auto;
             text-align: center;
+            position: relative;
+            z-index: 20; /* Added a solid background to hide the nav bar */
+            background-color: var(--dark);
         }
         
         .newsletter-form {
@@ -425,6 +434,9 @@
             padding: 100px 50px;
             max-width: 1200px;
             margin: 0 auto;
+            position: relative;
+            z-index: 20; /* Added a solid background to hide the nav bar */
+            background-color: var(--dark);
         }
 
         .bio-container {
@@ -473,7 +485,7 @@
 
         /* Updated bio-text styling */
         .bio-columns {
-            display: block; /* Changed to a block element to remove column layout */
+            display: block;
         }
         
         .bio-text {
@@ -489,6 +501,9 @@
             padding: 100px 50px;
             max-width: 1400px;
             margin: 0 auto;
+            position: relative;
+            z-index: 20;
+            background-color: var(--dark);
         }
 
         .projects-grid {
@@ -568,6 +583,9 @@
         .social-section {
             padding: 100px 50px;
             text-align: center;
+            position: relative;
+            z-index: 20;
+            background-color: var(--dark);
         }
 
         .social-links {
@@ -775,7 +793,7 @@
     <section id="bio" class="bio-section">
         <h2 class="section-title">ABOUT MESSY</h2>
         <div class="bio-container">
-            <!-- Updated image source to the correct GitHub URL -->
+            <!-- The image is now displayed using the direct GitHub URL -->
             <div class="bio-image">
                 <img src="https://raw.githubusercontent.com/m3ssyforever/m3ssy/refs/heads/main/cc_messy.png" onerror="this.onerror=null;this.src='https://placehold.co/400x500/333333/666666?text=Image+Not+Found';" alt="DJ Messy">
             </div>
