@@ -101,7 +101,7 @@
             position: absolute;
             width: 300%;
             height: 300%;
-            background: 
+            background:
                 radial-gradient(circle at 10% 20%, #ff0066 0%, transparent 40%),
                 radial-gradient(circle at 80% 80%, #00ff88 0%, transparent 40%),
                 radial-gradient(circle at 40% 40%, #ffff00 0%, transparent 50%),
@@ -122,10 +122,10 @@
             position: absolute;
             width: 100%;
             height: 100%;
-            background: 
-                conic-gradient(from 0deg at 30% 30%, 
+            background:
+                conic-gradient(from 0deg at 30% 30%,
                     #ff0066, #ff00ff, #0066ff, #00ffff, #00ff88, #88ff00, #ffff00, #ff8800, #ff0066),
-                conic-gradient(from 180deg at 70% 70%, 
+                conic-gradient(from 180deg at 70% 70%,
                     #00ff88, #00ffff, #ff00ff, #ff0066, #ff8800, #ffff00, #88ff00, #00ff88);
             animation: rotate 15s linear infinite reverse;
             opacity: 0.5;
@@ -141,20 +141,20 @@
         }
 
         @keyframes colorShift {
-            0%, 100% { 
-                filter: blur(40px) contrast(1.5) saturate(1.5) hue-rotate(0deg); 
+            0%, 100% {
+                filter: blur(40px) contrast(1.5) saturate(1.5) hue-rotate(0deg);
             }
-            20% { 
-                filter: blur(60px) contrast(2) saturate(2) hue-rotate(90deg); 
+            20% {
+                filter: blur(60px) contrast(2) saturate(2) hue-rotate(90deg);
             }
-            40% { 
-                filter: blur(30px) contrast(1.8) saturate(1.8) hue-rotate(180deg); 
+            40% {
+                filter: blur(30px) contrast(1.8) saturate(1.8) hue-rotate(180deg);
             }
-            60% { 
-                filter: blur(50px) contrast(1.6) saturate(2.5) hue-rotate(270deg); 
+            60% {
+                filter: blur(50px) contrast(1.6) saturate(2.5) hue-rotate(270deg);
             }
-            80% { 
-                filter: blur(45px) contrast(2.2) saturate(1.7) hue-rotate(360deg); 
+            80% {
+                filter: blur(45px) contrast(2.2) saturate(1.7) hue-rotate(360deg);
             }
         }
 
@@ -916,7 +916,7 @@
             // Your API URL
             const API_URL = "https://connect.mailerlite.com/api/subscribers";
             // The JWT token provided by the user
-            const JWT_TOKEN = "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiI0IiwianRpIjoiYWM3MjUzOThjNDU3NmE5OGZhZTFhN2QwMzIzMTllNjg0M2JmMzM0OTY4MmQ0N2U1NmZmNjZiYjIwOWVmNjQyZmM1NmFiZDk1ZDhhMWQwYWYiLCJpYXQiOjE3NTQ2MjM4ODguOTA0Mzg2LCJuYmYiOjE3NTQ2MjM4ODguOTA0Mzg4LCJleHAiOjQ5MTAyOTc0ODguODk5OTUsInN1YiI6IjE3MzYxNjQiLCJzY29wZXMiOltdfQ.J1GvrCFXzDXlKFi_sJdVBWWCnEMUrsL5e8Fc2yBH8XdOIWGRSmU106T6CAuui9hWuet5_CfA9k6Totscl2quWAKlW32lW2Ee58uK0SY_972iL9g5blPgsten7TwSQRU_q4Jvm9UQftme7i7XKffSg6KaUXRG3VN_TZ5vmRUgupRzYi2_Yg_e_n82MhvpCClOT0Vc6OOBNfwemFFXy0vvZzDZK9ErJQFA-Bxd1U5G3FHkurVFEg5oNDrtgC1CcfKGHvlm2g1aCq3rqPDFsToMHilDSnWiLii-LR_nC54iKsUvc-yjWgoy95hHQR03mttvmCV2NlET0H4VcjJ5c0EtGWYVG5ZaNiNHBoOIAECBOQZcgccOPsOkSHEDXfDEsifeMi7lLGvaRlp4x5rmLlhG2tJAvq4FfZWP7ycvAPSR03M9oH8z4CmZps3VHMJIut9l5zWykUvnEK_a7XbwWYnqJxij8Fn-p96eyXQBBk1FOIA-eT9yhkbzGVldJYHzHsd86bg30AWAsqLF1cxEyT0COIYx1DIl1DVwCu61dAc0h734lVkL8mb9J4LTuSHo9-KWtxlrlxqb4WCa-arOmoRwpvGNOPC05mCgwmls_VCER4ioItQQu6pRXjzx9PgTr9e0yerehYglXOfpFKRQF6nn1JCIzew2CVWszrmopXuA_w";
+            const JWT_TOKEN = "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiI0IiwianRpIjoiYWM3MjUzOThjNDU3NmE5OGZhZTFhN2QwMzIzMTllNjg0M2JmMzM0OTY4MmQ0N2U1NmZmNjZiYjIwOWVmNjQyZmM1NmFiZDk1ZDhhMWQwYWYiLCJpYXQiOjE3NTQ2MjM4ODguOTA0Mzg2LCJuYmYiOjE3NTQ2MjM4ODguOTA0Mzg4LCJleHAiOjQ5MTAyOTc0ODguODk5OTUsInN1YiI6IjE3MzYxNjQiLCJzY29wZXMiOltdfQ.J1GvrCFXzDXlKFi_sJdVBWWCnEMUrsL5e8Fc2yBH8XdOIWGRSmU106T6CAuui9hWuet5_CfA9k6Totscl2quWAKlW32lW2Ee58uK0SY_972iL9g5blPgsten7TwSQRU_q4Jvm9UQftme7i7XKffSg6KaUXRG3VN_TZ5vmRUgupRzYi2_Yg_e_n82MhvpCClOT0Vc6OOBNfwemFFXy0vvZzDZK9ErJQFA-Bxd1U5G3nFHkurVFEg5oNDrtgC1CcfKGHvlm2g1aCq3rqPDFsToMHilDSnWiLii-LR_nC54iKsUvc-yjWgoy95hHQR03mttvmCV2NlET0H4VcjJ5c0EtGWYVG5ZaNiNHBoOIAECBOQZcgccOPsOkSHEDXfDEsifeMi7lLGvaRlp4x5rmLlhG2tJAvq4FfZWP7ycvAPSR03M9oH8z4CmZps3VHMJIut9l5zWykUvnEK_a7XbwWYnqJxij8Fn-p96eyXQBBk1FOIA-eT9yhkbzGVldJYHzHsd86bg30AWAsqLF1cxEyT0COIYx1DIl1DVwCu61dAc0h734lVkL8mb9J4LTuSHo9-KWtxlrlxqb4WCa-arOmoRwpvGNOPC05mCgwmls_VCER4ioItQQu6pRXjzx9PgTr9e0yerehYglXOfpFKRQF6nn1JCIzew2CVWszrmopXuA_w";
 
             try {
                 const response = await fetch(API_URL, {
