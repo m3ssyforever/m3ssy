@@ -796,8 +796,8 @@
     </section>
 
     <!-- Email Marketing Form Section -->
-    <section id="contact" class="email-form-section" style="padding: 100px 50px; max-width: 1400px; margin: 0 auto; text-align: center;">
-        <h2 class="section-title" style="display: inline-block;">Stay In Touch</h2>
+    <!-- The previous "Stay In Touch" heading and line were removed as requested. -->
+    <section id="contact" class="email-form-section">
         <div class="mt-8 flex items-center justify-center p-4">
             <div id="root" class="w-full max-w-2xl gradient-border-container"></div>
         </div>
@@ -814,6 +814,7 @@
         const { createRoot } = ReactDOM;
 
         // This is the URL of your deployed Google Apps Script web app.
+        // 🚨 REPLACE THIS URL WITH THE ONE YOU COPIED FROM YOUR OWN DEPLOYED SCRIPT 🚨
         const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbyMOj4gBpuoD2fbkZYT7VePMBoFMMbn61O1SunCafe2-XkO9B7GWhGnWSVd1vFWu0Qw1A/exec';
 
         const App = () => {
