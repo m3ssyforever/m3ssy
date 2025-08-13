@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MESSY - Sign Up</title>
+    <!-- Combined Font Link -->
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    
+    <!-- Dependencies for React and Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    
+    <!-- Consolidated custom styles -->
+    <style>
+        /* Define global CSS variables and base styles */
+        :root {
+            --primary: #ff0066;
+            --secondary: #00ff88;
+            --dark: #0a0a0a;
+            --light: #f0f0f0;
+        }
+
+        body {
+            font-family: 'Press Start 2P', monospace;
+            background: var(--dark);
+            color: var(--light);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column; /* Changed to column to stack header and form */
+            align-items: center;
+            justify-content: center;
+            overflow-x: hidden;
+            padding: 20px;
+        }
+
+        /* Replicate the animation and border styles from your main site */
+        @keyframes glitch {
+            0%, 100% { text-shadow: 2px 2px 0 var(--primary), -2px -2px 0 var(--secondary); }
+            25% { text-shadow: -2px 2px 0 var(--primary), 2px -2px 0 var(--secondary); }
+            50% { text-shadow: 2px -2px 0 var(--primary), -2px 2px 0 var(--secondary); }
+            75% { text-shadow: -2px -2px 0 var(--primary), 2px 2px 0 var(--secondary); }
+        }
+    
+        .gradient-border-container {
+            position: relative;
+            border-radius: 15px;
+            padding: 3px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            box-shadow: 0 0 15px rgba(255, 0, 102, 0.5);
+        }
+
+        .inner-container {
+            background: var(--dark);
+            padding: 30px;
+            border-radius: 12px;
+        }
+        
+        .header-logo {
+            font-size: clamp(3rem, 12vw, 10rem);
+            font-weight: 900;
+            letter-spacing: -0.05em;
+            line-height: 0.9;
+            background: linear-gradient(135deg, var(--light), var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: glitch 3s infinite, pulse 2s ease-in-out infinite;
+            font-family: 'Press Start 2P', monospace;
+            margin-bottom: 2rem;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.01); opacity: 0.9; }
+        }
+
+        .form-input {
+            color: var(--light);
+            background: #222;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            padding: 10px 15px;
+            transition: all 0.3s ease;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--secondary);
+            box-shadow: 0 0 10px rgba(0, 255, 136, 0.5);
+        }
+
+        .signup-button {
+            background: var(--primary);
+            border: none;
+            color: var(--dark);
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            transition: all 0.3s ease;
+        }
+        
+        .signup-button:hover {
+            background: var(--secondary);
+            color: var(--dark);
+            transform: scale(1.05);
+            box-shadow: 0 0 20px rgba(0, 255, 136, 0.7);
+        }
+    </style>
+</head>
+<body class="p-8">
+    <div class="header-logo">MESSY</div>
+    <div class="w-full max-w-2xl gradient-border-container">
+        <div id="root" class="w-full max-w-2xl inner-container"></div>
+    </div>
+
+    <!-- React Email Form Script -->
+    <script type="text/babel">
+        const { useState } = React;
+        const { createRoot } = ReactDOM;
+
+        // This is the URL of your deployed Google Apps Script web app.
+        // 🚨 REPLACE THIS URL WITH YOUR OWN DEPLOYED SCRIPT URL 🚨
+        const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbyMOj4gBpuoD2fbkZYT7VePMBoFMMbn61O1SunCafe2-XkO9B7GWhGnWSVd1vFWu0Qw1A/exec';
+
+        const App = () => {
+            const [formData, setFormData] = useState({ name: '', email: '' });
+            const [formStatus, setFormStatus] = useState('');
+
+            const handleChange = (e) => {
+                setFormData({ ...formData, [e.target.name]: e.target.value });
+            };
+
+            const handleFormSubmit = async (e) => {
+                e.preventDefault();
+                setFormStatus('Submitting...');
+
+                try {
+                    const response = await fetch(WEB_APP_URL, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/x-www-form-urlencoded',
+                        },
+                        body: new URLSearchParams({
+                            action: 'signup',
+                            name: formData.name,
+                            email: formData.email,
+                        }),
+                    });
+
+                    const result = await response.json();
+                    if (result.status === 'success') {
+                        setFormStatus('Thanks for signing up!');
+                        setFormData({ name: '', email: '' });
+                    } else {
+                        setFormStatus(`Error: ${result.message}`);
+                    }
+                } catch (error) {
+                    setFormStatus('An error occurred. Please try again.');
+                    console.error('Submission error:', error);
+                }
+            };
+
+            return (
+                <div className="w-full max-w-2xl inner-container">
+                    <div className="mb-8">
+                        <h1 className="text-3xl md:text-4xl font-bold text-center mb-6 glitch-text">
+                            STAY IN TOUCH
+                        </h1>
+                        <form onSubmit={handleFormSubmit} className="space-y-4">
+                            <div>
+                                <input
+                                    type="text"
+                                    id="name"
+                                    name="name"
+                                    value={formData.name}
+                                    onChange={handleChange}
+                                    required
+                                    placeholder="Name"
+                                    className="w-full form-input"
+                                />
+                            </div>
+                            <div>
+                                <input
+                                    type="email"
+                                    id="email"
+                                    name="email"
+                                    value={formData.email}
+                                    onChange={handleChange}
+                                    required
+                                    placeholder="Email"
+                                    className="w-full form-input"
+                                />
+                            </div>
+                            <button
+                                type="submit"
+                                className="w-full flex justify-center py-3 px-4 rounded-lg signup-button"
+                            >
+                                Sign Up
+                            </button>
+                        </form>
+                        {formStatus && (
+                            <p className="mt-4 text-center text-sm opacity-80">
+                                {formStatus}
+                            </p>
+                        )}
+                    </div>
+                </div>
+            );
+        };
+
+        const container = document.getElementById('root');
+        if (container) {
+          const root = createRoot(container);
+          root.render(<App />);
+        }
+    </script>
+</body>
+</html>
