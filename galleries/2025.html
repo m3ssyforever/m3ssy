@@ -167,7 +167,10 @@
         
         .lb-outerContainer {
             background: transparent !important;
-            pointer-events: none !important;
+        }
+        
+        .lb-container {
+            pointer-events: auto !important;
         }
         
         .lb-dataContainer {
@@ -445,15 +448,35 @@
             'albumLabel': 'Image %1 of %2'
         });
 
-        // Enable right-click on lightbox images
+        // Enable right-click on ALL lightbox elements
+        $(document).on('contextmenu', '.lightbox', function(e) {
+            e.stopPropagation();
+            return true;
+        });
+        
+        $(document).on('contextmenu', '.lb-outerContainer', function(e) {
+            e.stopPropagation();
+            return true;
+        });
+        
+        $(document).on('contextmenu', '.lb-container', function(e) {
+            e.stopPropagation();
+            return true;
+        });
+        
         $(document).on('contextmenu', '.lb-image', function(e) {
-            return true; // Allow default context menu
+            e.stopPropagation();
+            return true;
         });
 
-        // Remove pointer-events restriction from lightbox image
-        $(document).on('click', '.lb-image', function(e) {
-            e.stopPropagation();
-        });
+        // Override Lightbox's preventDefault on contextmenu
+        document.addEventListener('contextmenu', function(e) {
+            if (e.target.classList.contains('lb-image') ||
+                e.target.closest('.lb-container')) {
+                e.stopImmediatePropagation();
+                return true;
+            }
+        }, true);
     </script>
 </body>
 </html>
