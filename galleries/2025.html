@@ -162,10 +162,12 @@
             width: auto !important;
             height: auto !important;
             object-fit: contain !important;
+            pointer-events: auto !important;
         }
         
         .lb-outerContainer {
             background: transparent !important;
+            pointer-events: none !important;
         }
         
         .lb-dataContainer {
@@ -441,6 +443,16 @@
             'resizeDuration': 200,
             'wrapAround': true,
             'albumLabel': 'Image %1 of %2'
+        });
+
+        // Enable right-click on lightbox images
+        $(document).on('contextmenu', '.lb-image', function(e) {
+            return true; // Allow default context menu
+        });
+
+        // Remove pointer-events restriction from lightbox image
+        $(document).on('click', '.lb-image', function(e) {
+            e.stopPropagation();
         });
     </script>
 </body>
