@@ -1,0 +1,842 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#1f1f1f">
+<title>Shopping List</title>
+<style>
+  :root {
+    --bg: #faf9f7;
+    --surface: #ffffff;
+    --surface-2: #f1efeb;
+    --text: #1f1f1f;
+    --muted: #6b6b6b;
+    --border: #e6e3dd;
+    --accent: #2e7d5b;
+    --accent-soft: #d8ece1;
+    --danger: #b3261e;
+    --warn: #b98907;
+    --shadow: 0 1px 2px rgba(0,0,0,.04), 0 6px 20px rgba(0,0,0,.05);
+    --radius: 14px;
+    --row-h: 52px;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #151514;
+      --surface: #1f1f1e;
+      --surface-2: #262624;
+      --text: #eeecea;
+      --muted: #a09d98;
+      --border: #302f2d;
+      --accent: #5ec089;
+      --accent-soft: #234634;
+      --danger: #e08079;
+      --warn: #d4a43c;
+      --shadow: 0 1px 2px rgba(0,0,0,.3), 0 6px 20px rgba(0,0,0,.35);
+    }
+  }
+
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, system-ui, sans-serif;
+    font-size: 17px;
+    line-height: 1.4;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    padding-bottom: env(safe-area-inset-bottom);
+    overscroll-behavior-y: contain;
+  }
+  button { font: inherit; color: inherit; background: none; border: 0; cursor: pointer; }
+  input, select { font: inherit; color: inherit; }
+
+  /* ---------- Header ---------- */
+  header.app {
+    position: sticky; top: 0; z-index: 10;
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: calc(env(safe-area-inset-top) + 10px) 14px 10px;
+  }
+  .app-title {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 10px;
+  }
+  .app-title h1 { font-size: 20px; font-weight: 700; margin: 0; letter-spacing: -0.01em; }
+  .menu-btn {
+    width: 40px; height: 40px; border-radius: 10px;
+    display: inline-flex; align-items: center; justify-content: center;
+    color: var(--muted);
+  }
+  .menu-btn:hover { background: var(--surface-2); color: var(--text); }
+
+  .tabs {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 4px;
+    background: var(--surface-2);
+    padding: 4px;
+    border-radius: 12px;
+  }
+  .tab {
+    text-align: center;
+    padding: 9px 12px;
+    border-radius: 9px;
+    font-size: 15px; font-weight: 600;
+    color: var(--muted);
+    transition: background .15s, color .15s;
+  }
+  .tab.active {
+    background: var(--surface);
+    color: var(--text);
+    box-shadow: var(--shadow);
+  }
+  .tab .badge {
+    display: inline-block;
+    background: var(--accent);
+    color: #fff;
+    font-size: 12px; font-weight: 700;
+    padding: 1px 7px;
+    border-radius: 99px;
+    margin-left: 6px;
+    vertical-align: 1px;
+  }
+  .tab:not(.active) .badge { background: var(--muted); }
+  .tab .badge.zero { display: none; }
+
+  .search-row { margin-top: 10px; position: relative; display: none; }
+  .search-row.show { display: block; }
+  .search-row input {
+    width: 100%;
+    padding: 10px 36px 10px 14px;
+    border: 1px solid var(--border);
+    background: var(--surface-2);
+    border-radius: 10px;
+    outline: none;
+  }
+  .search-row input:focus { border-color: var(--accent); }
+  .search-clear {
+    position: absolute; right: 6px; top: 50%; transform: translateY(-50%);
+    width: 28px; height: 28px; border-radius: 50%; color: var(--muted);
+    display: flex; align-items: center; justify-content: center;
+  }
+
+  /* ---------- Content ---------- */
+  main { padding: 12px 10px 120px; max-width: 720px; margin: 0 auto; }
+  .cat-group { margin-bottom: 14px; }
+  .cat-header {
+    display: flex; justify-content: space-between; align-items: baseline;
+    padding: 10px 6px 6px;
+    color: var(--muted);
+    font-size: 12px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    font-weight: 700;
+  }
+  .cat-header .count { font-weight: 500; }
+
+  .list {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+  }
+  .row {
+    display: flex; align-items: center; gap: 12px;
+    min-height: var(--row-h);
+    padding: 10px 14px;
+    border-top: 1px solid var(--border);
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+    transition: background .1s;
+  }
+  .row:first-child { border-top: 0; }
+  .row:active { background: var(--surface-2); }
+  .row.needed { background: var(--accent-soft); }
+  .row.needed:active { filter: brightness(.97); }
+
+  .check {
+    flex: 0 0 24px;
+    width: 24px; height: 24px;
+    border-radius: 50%;
+    border: 2px solid var(--border);
+    background: transparent;
+    display: flex; align-items: center; justify-content: center;
+    transition: all .15s;
+  }
+  .row.needed .check {
+    background: var(--accent);
+    border-color: var(--accent);
+  }
+  .check svg { width: 14px; height: 14px; stroke: #fff; stroke-width: 3; fill: none; display: none; }
+  .row.needed .check svg { display: block; }
+
+  .row-name { flex: 1; font-size: 16px; }
+  .row.bought .row-name { color: var(--muted); text-decoration: line-through; }
+  .row.bought .check {
+    background: var(--muted); border-color: var(--muted);
+  }
+  .row.bought .check svg { display: block; }
+
+  .row-actions {
+    display: flex; gap: 4px; opacity: 0;
+    transition: opacity .15s;
+  }
+  body.edit-mode .row-actions { opacity: 1; }
+  .row-actions button {
+    width: 32px; height: 32px; border-radius: 8px;
+    display: inline-flex; align-items: center; justify-content: center;
+    color: var(--muted);
+  }
+  .row-actions button:hover { background: var(--surface-2); color: var(--text); }
+  .row-actions .delete:hover { color: var(--danger); background: rgba(179,38,30,.08); }
+
+  .empty {
+    text-align: center; color: var(--muted);
+    padding: 48px 20px;
+  }
+  .empty h2 { margin: 0 0 6px; font-weight: 600; color: var(--text); font-size: 18px; }
+  .empty p { margin: 0; font-size: 14px; }
+
+  /* ---------- Shop view summary ---------- */
+  .shop-summary {
+    padding: 14px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    margin-bottom: 14px;
+    display: flex; justify-content: space-between; align-items: center;
+  }
+  .shop-summary .progress-text { font-size: 14px; color: var(--muted); }
+  .shop-summary .progress-bar {
+    width: 100%; height: 6px; background: var(--surface-2);
+    border-radius: 99px; overflow: hidden; margin-top: 8px;
+  }
+  .shop-summary .progress-fill {
+    height: 100%; background: var(--accent); transition: width .3s;
+  }
+
+  /* ---------- FAB ---------- */
+  .fab {
+    position: fixed;
+    right: 16px;
+    bottom: calc(16px + env(safe-area-inset-bottom));
+    width: 56px; height: 56px;
+    border-radius: 50%;
+    background: var(--accent);
+    color: #fff;
+    font-size: 28px; line-height: 1;
+    display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 4px 14px rgba(46,125,91,.35), 0 1px 3px rgba(0,0,0,.15);
+    z-index: 20;
+  }
+  .fab:active { transform: scale(.95); }
+
+  /* ---------- Sheet / modal ---------- */
+  .sheet-backdrop {
+    position: fixed; inset: 0;
+    background: rgba(0,0,0,.45);
+    z-index: 30;
+    opacity: 0; pointer-events: none;
+    transition: opacity .2s;
+  }
+  .sheet-backdrop.open { opacity: 1; pointer-events: auto; }
+  .sheet {
+    position: fixed; left: 0; right: 0; bottom: 0;
+    background: var(--surface);
+    border-radius: 18px 18px 0 0;
+    padding: 14px 16px calc(20px + env(safe-area-inset-bottom));
+    z-index: 31;
+    transform: translateY(100%);
+    transition: transform .25s cubic-bezier(.2,.7,.2,1);
+    max-width: 720px; margin: 0 auto;
+    box-shadow: 0 -8px 28px rgba(0,0,0,.18);
+  }
+  .sheet.open { transform: translateY(0); }
+  .sheet-handle {
+    width: 36px; height: 4px; border-radius: 2px;
+    background: var(--border);
+    margin: 0 auto 12px;
+  }
+  .sheet h3 { margin: 0 0 12px; font-size: 17px; }
+  .field {
+    display: flex; flex-direction: column; gap: 6px; margin-bottom: 12px;
+  }
+  .field label { font-size: 13px; color: var(--muted); }
+  .field input, .field select {
+    padding: 11px 12px;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    background: var(--surface-2);
+    outline: none;
+  }
+  .field input:focus, .field select:focus { border-color: var(--accent); }
+  .sheet .buttons {
+    display: flex; gap: 8px; margin-top: 4px;
+  }
+  .sheet .buttons button {
+    flex: 1;
+    padding: 12px;
+    border-radius: 10px;
+    font-weight: 600;
+  }
+  .btn-primary {
+    background: var(--accent); color: #fff;
+  }
+  .btn-primary:disabled { background: var(--border); color: var(--muted); }
+  .btn-ghost {
+    background: var(--surface-2); color: var(--text);
+  }
+  .btn-danger {
+    background: var(--danger); color: #fff;
+  }
+
+  /* ---------- Menu ---------- */
+  .menu {
+    position: absolute;
+    top: calc(env(safe-area-inset-top) + 50px);
+    right: 10px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    box-shadow: var(--shadow);
+    padding: 6px;
+    z-index: 40;
+    min-width: 220px;
+    display: none;
+  }
+  .menu.open { display: block; }
+  .menu button {
+    width: 100%; text-align: left;
+    padding: 11px 12px; border-radius: 8px;
+    font-size: 15px;
+    display: flex; align-items: center; gap: 10px;
+  }
+  .menu button:hover { background: var(--surface-2); }
+  .menu button .sub { color: var(--muted); font-size: 12px; margin-left: auto; }
+  .menu hr { border: 0; border-top: 1px solid var(--border); margin: 4px 0; }
+
+  .toast {
+    position: fixed;
+    left: 50%; bottom: calc(90px + env(safe-area-inset-bottom));
+    transform: translateX(-50%) translateY(20px);
+    background: var(--text);
+    color: var(--surface);
+    padding: 10px 16px;
+    border-radius: 99px;
+    font-size: 14px;
+    box-shadow: var(--shadow);
+    opacity: 0;
+    transition: opacity .2s, transform .2s;
+    z-index: 50;
+    pointer-events: none;
+    max-width: 90vw;
+  }
+  .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+  /* Hide unneeded categories in pantry when filtering */
+  .cat-group.hidden, .row.hidden { display: none; }
+</style>
+</head>
+<body>
+
+<header class="app">
+  <div class="app-title">
+    <h1 id="viewTitle">Pantry</h1>
+    <div style="display:flex; gap:4px;">
+      <button class="menu-btn" id="searchBtn" aria-label="Search">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+      </button>
+      <button class="menu-btn" id="menuBtn" aria-label="Menu">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><circle cx="5" cy="12" r="1.8"/><circle cx="12" cy="12" r="1.8"/><circle cx="19" cy="12" r="1.8"/></svg>
+      </button>
+    </div>
+  </div>
+  <nav class="tabs" role="tablist">
+    <button class="tab active" data-view="pantry" role="tab">Pantry</button>
+    <button class="tab" data-view="shop" role="tab">Shopping List<span class="badge zero" id="neededBadge">0</span></button>
+  </nav>
+  <div class="search-row" id="searchRow">
+    <input type="search" id="searchInput" placeholder="Search items…" autocomplete="off">
+    <button class="search-clear" id="searchClear" aria-label="Clear search">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+    </button>
+  </div>
+</header>
+
+<main id="main"></main>
+
+<button class="fab" id="fab" aria-label="Add item">+</button>
+
+<!-- Menu -->
+<div class="menu" id="menu">
+  <button id="editToggle"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg> <span>Edit items</span></button>
+  <hr>
+  <button id="clearCheckedBtn"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><path d="m19 6-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg> <span>Finish shopping</span><span class="sub" id="checkedSub">0</span></button>
+  <button id="uncheckAllBtn"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/></svg> <span>Clear shopping list</span></button>
+  <hr>
+  <button id="exportBtn"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="m7 10 5 5 5-5"/><path d="M12 15V3"/></svg> <span>Export backup</span></button>
+  <button id="importBtn"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="m17 8-5-5-5 5"/><path d="M12 3v12"/></svg> <span>Import backup</span></button>
+  <input type="file" id="importFile" accept=".json,application/json" style="display:none">
+  <hr>
+  <button id="resetBtn" style="color:var(--danger);"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/></svg> <span>Reset to defaults…</span></button>
+</div>
+
+<!-- Add / edit item sheet -->
+<div class="sheet-backdrop" id="sheetBackdrop"></div>
+<div class="sheet" id="sheet">
+  <div class="sheet-handle"></div>
+  <h3 id="sheetTitle">Add item</h3>
+  <div class="field">
+    <label for="itemName">Name</label>
+    <input type="text" id="itemName" autocomplete="off" autocapitalize="words">
+  </div>
+  <div class="field">
+    <label for="itemCat">Category</label>
+    <select id="itemCat"></select>
+  </div>
+  <div class="field" id="newCatField" style="display:none">
+    <label for="newCatInput">New category name</label>
+    <input type="text" id="newCatInput" autocapitalize="words">
+  </div>
+  <div class="buttons">
+    <button class="btn-ghost" id="sheetCancel">Cancel</button>
+    <button class="btn-primary" id="sheetSave">Save</button>
+  </div>
+  <div class="buttons" id="sheetDeleteRow" style="display:none; margin-top:8px;">
+    <button class="btn-danger" id="sheetDelete">Delete item</button>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script id="seedData" type="application/json">[{"name":"Bread","cat":"Baked Goods"},{"name":"Bread Crumbs","cat":"Baked Goods"},{"name":"Bread, GF","cat":"Baked Goods"},{"name":"Tortillas, corn","cat":"Baked Goods"},{"name":"Buttermilk","cat":"Condiments"},{"name":"Capers","cat":"Condiments"},{"name":"Chili Paste","cat":"Condiments"},{"name":"Dijon Mustard","cat":"Condiments"},{"name":"Fish Sauce","cat":"Condiments"},{"name":"Hot sauce","cat":"Condiments"},{"name":"Joseon (Korean soy sauce)","cat":"Condiments"},{"name":"Ketchup","cat":"Condiments"},{"name":"Liquid Aminos/Soy Sauce","cat":"Condiments"},{"name":"Maple Syrup","cat":"Condiments"},{"name":"Marmite","cat":"Condiments"},{"name":"Mayonnaise","cat":"Condiments"},{"name":"Oil, Acocado","cat":"Condiments"},{"name":"Oil, Olive","cat":"Condiments"},{"name":"Oil, Toasted Sesame","cat":"Condiments"},{"name":"Pesto","cat":"Condiments"},{"name":"Pickles","cat":"Condiments"},{"name":"Rice Vinegar, brown","cat":"Condiments"},{"name":"Soy sauce","cat":"Condiments"},{"name":"Tahini","cat":"Condiments"},{"name":"Tomato Paste","cat":"Condiments"},{"name":"Vinegar, Apple Cider","cat":"Condiments"},{"name":"Vinegar, Balsamaic","cat":"Condiments"},{"name":"Vinegar, Distilled","cat":"Condiments"},{"name":"Vinegar, Red Wine","cat":"Condiments"},{"name":"Vinegar, Rice","cat":"Condiments"},{"name":"Vinegar, White Wine","cat":"Condiments"},{"name":"Worcestershire","cat":"Condiments"},{"name":"Almond Milk","cat":"Dairy / Eggs"},{"name":"Butter","cat":"Dairy / Eggs"},{"name":"Cheddar Cheese","cat":"Dairy / Eggs"},{"name":"Cream","cat":"Dairy / Eggs"},{"name":"Eggs","cat":"Dairy / Eggs"},{"name":"Feta","cat":"Dairy / Eggs"},{"name":"Gruy\u00e8re","cat":"Dairy / Eggs"},{"name":"Milk","cat":"Dairy / Eggs"},{"name":"Mozzeralla","cat":"Dairy / Eggs"},{"name":"Parmesan Cheese","cat":"Dairy / Eggs"},{"name":"Pecarino","cat":"Dairy / Eggs"},{"name":"Queso Fresco","cat":"Dairy / Eggs"},{"name":"Ricotta","cat":"Dairy / Eggs"},{"name":"Yogurt","cat":"Dairy / Eggs"},{"name":"Apple Juice","cat":"Drinks & Snacks"},{"name":"Apple Sauce","cat":"Drinks & Snacks"},{"name":"Beer","cat":"Drinks & Snacks"},{"name":"Beer, GF","cat":"Drinks & Snacks"},{"name":"Chips","cat":"Drinks & Snacks"},{"name":"Cocunut Drink","cat":"Drinks & Snacks"},{"name":"Coffee","cat":"Drinks & Snacks"},{"name":"Orange Juice","cat":"Drinks & Snacks"},{"name":"Red Wine","cat":"Drinks & Snacks"},{"name":"Sake","cat":"Drinks & Snacks"},{"name":"Seltzer","cat":"Drinks & Snacks"},{"name":"Sherry","cat":"Drinks & Snacks"},{"name":"Tea, Black","cat":"Drinks & Snacks"},{"name":"Tea, Herbal","cat":"Drinks & Snacks"},{"name":"White Wine","cat":"Drinks & Snacks"},{"name":"Beans, Black","cat":"Dry Goods"},{"name":"Beans, Kidney","cat":"Dry Goods"},{"name":"Beans, Pinto","cat":"Dry Goods"},{"name":"Beans, White","cat":"Dry Goods"},{"name":"Blackeyed Peas","cat":"Dry Goods"},{"name":"Canned Tomatoes","cat":"Dry Goods"},{"name":"Chickpeas","cat":"Dry Goods"},{"name":"Chocolate","cat":"Dry Goods"},{"name":"Cocoa Powder","cat":"Dry Goods"},{"name":"Coconut, Milk","cat":"Dry Goods"},{"name":"Coconut, Shredded","cat":"Dry Goods"},{"name":"Corn Meal","cat":"Dry Goods"},{"name":"Grits","cat":"Dry Goods"},{"name":"Lasagna Noodles","cat":"Dry Goods"},{"name":"Lentils, Green","cat":"Dry Goods"},{"name":"Lentils, Red","cat":"Dry Goods"},{"name":"Oatmeal","cat":"Dry Goods"},{"name":"Pasta","cat":"Dry Goods"},{"name":"Pasta, GF","cat":"Dry Goods"},{"name":"Peanut Butter","cat":"Dry Goods"},{"name":"Quinoa","cat":"Dry Goods"},{"name":"Rice, Arborio","cat":"Dry Goods"},{"name":"Rice, Basmati","cat":"Dry Goods"},{"name":"Rice, Jasmine","cat":"Dry Goods"},{"name":"Sunflower Butter","cat":"Dry Goods"},{"name":"Berries","cat":"Frozen"},{"name":"Corn","cat":"Frozen"},{"name":"Peas","cat":"Frozen"},{"name":"Apples","cat":"Fruit"},{"name":"Bananas","cat":"Fruit"},{"name":"Blueberries","cat":"Fruit"},{"name":"Grapefruit","cat":"Fruit"},{"name":"Grapes","cat":"Fruit"},{"name":"Lemons","cat":"Fruit"},{"name":"Limes","cat":"Fruit"},{"name":"Olives","cat":"Fruit"},{"name":"Oranges","cat":"Fruit"},{"name":"Papaya","cat":"Fruit"},{"name":"Peaches","cat":"Fruit"},{"name":"Pears","cat":"Fruit"},{"name":"Plums","cat":"Fruit"},{"name":"Strawberries","cat":"Fruit"},{"name":"Cilantro","cat":"Herbs"},{"name":"Mint","cat":"Herbs"},{"name":"Parsley","cat":"Herbs"},{"name":"Rosemary","cat":"Herbs"},{"name":"Tarragon","cat":"Herbs"},{"name":"Body Wash","cat":"Housekeeping"},{"name":"Contact Solution","cat":"Housekeeping"},{"name":"Dental Floss","cat":"Housekeeping"},{"name":"Deodorant","cat":"Housekeeping"},{"name":"Dish Soap","cat":"Housekeeping"},{"name":"Dishwasher Detergent","cat":"Housekeeping"},{"name":"Freezer Bags, Gallon","cat":"Housekeeping"},{"name":"Freezer Bags, Quart","cat":"Housekeeping"},{"name":"Garbage Bags","cat":"Housekeeping"},{"name":"Hand Soap","cat":"Housekeeping"},{"name":"Laundry Detergent","cat":"Housekeeping"},{"name":"Paper Towels","cat":"Housekeeping"},{"name":"Sponges","cat":"Housekeeping"},{"name":"Sunscreen","cat":"Housekeeping"},{"name":"Surface Cleaner","cat":"Housekeeping"},{"name":"Swiffer, Dry","cat":"Housekeeping"},{"name":"Swiffer, Wet","cat":"Housekeeping"},{"name":"Toilet Cleaner","cat":"Housekeeping"},{"name":"Toilet Paper","cat":"Housekeeping"},{"name":"Toothpaste","cat":"Housekeeping"},{"name":"Anchovi","cat":"Meat"},{"name":"Bacon","cat":"Meat"},{"name":"Chicken Parts","cat":"Meat"},{"name":"Chicken, Whole","cat":"Meat"},{"name":"Cold cuts","cat":"Meat"},{"name":"Fish","cat":"Meat"},{"name":"Ground Beef","cat":"Meat"},{"name":"Ham","cat":"Meat"},{"name":"Mortadella","cat":"Meat"},{"name":"Pork","cat":"Meat"},{"name":"Salmon","cat":"Meat"},{"name":"Sausage","cat":"Meat"},{"name":"Tofu","cat":"Meat"},{"name":"Tuna","cat":"Meat"},{"name":"Turkey","cat":"Meat"},{"name":"Almonds","cat":"Nuts / Seeds / Dried Fruit"},{"name":"Cashews","cat":"Nuts / Seeds / Dried Fruit"},{"name":"Chia Seeds","cat":"Nuts / Seeds / Dried Fruit"},{"name":"Cranberries, Dried","cat":"Nuts / Seeds / Dried Fruit"},{"name":"Dates","cat":"Nuts / Seeds / Dried Fruit"},{"name":"Figs","cat":"Nuts / Seeds / Dried Fruit"},{"name":"Granola","cat":"Nuts / Seeds / Dried Fruit"},{"name":"Mango, Dried","cat":"Nuts / Seeds / Dried Fruit"},{"name":"Peanuts","cat":"Nuts / Seeds / Dried Fruit"},{"name":"Pecans","cat":"Nuts / Seeds / Dried Fruit"},{"name":"Pistachios.","cat":"Nuts / Seeds / Dried Fruit"},{"name":"Pumpkin Seeds","cat":"Nuts / Seeds / Dried Fruit"},{"name":"Raisins","cat":"Nuts / Seeds / Dried Fruit"},{"name":"Sesame Seeds","cat":"Nuts / Seeds / Dried Fruit"},{"name":"Sunflower Seeds","cat":"Nuts / Seeds / Dried Fruit"},{"name":"Walnuts","cat":"Nuts / Seeds / Dried Fruit"},{"name":"Allspice","cat":"Spices & Baking"},{"name":"Anise","cat":"Spices & Baking"},{"name":"Baking Powder","cat":"Spices & Baking"},{"name":"Baking Soda","cat":"Spices & Baking"},{"name":"Bay Leaves","cat":"Spices & Baking"},{"name":"Caraway seeds","cat":"Spices & Baking"},{"name":"Cardamom","cat":"Spices & Baking"},{"name":"Cayenne","cat":"Spices & Baking"},{"name":"Chicken Stock","cat":"Spices & Baking"},{"name":"Chickpea flour","cat":"Spices & Baking"},{"name":"Cinnamon","cat":"Spices & Baking"},{"name":"Cloves","cat":"Spices & Baking"},{"name":"Corn Starch","cat":"Spices & Baking"},{"name":"Corriander","cat":"Spices & Baking"},{"name":"Cumin, Whole","cat":"Spices & Baking"},{"name":"Curry","cat":"Spices & Baking"},{"name":"Fennel","cat":"Spices & Baking"},{"name":"Flour","cat":"Spices & Baking"},{"name":"Flour, Coconut","cat":"Spices & Baking"},{"name":"Flour, GF","cat":"Spices & Baking"},{"name":"Flour, Tapioca","cat":"Spices & Baking"},{"name":"Flour, White Rice","cat":"Spices & Baking"},{"name":"Gelatin","cat":"Spices & Baking"},{"name":"Ginger, Ground","cat":"Spices & Baking"},{"name":"Honey","cat":"Spices & Baking"},{"name":"Kosher Salt","cat":"Spices & Baking"},{"name":"Maseca","cat":"Spices & Baking"},{"name":"Mustard Seeds","cat":"Spices & Baking"},{"name":"Nutmeg","cat":"Spices & Baking"},{"name":"Oregano","cat":"Spices & Baking"},{"name":"PAN","cat":"Spices & Baking"},{"name":"Paprika","cat":"Spices & Baking"},{"name":"Paprika, Smoked","cat":"Spices & Baking"},{"name":"Pepper","cat":"Spices & Baking"},{"name":"Red Pepper Flakes","cat":"Spices & Baking"},{"name":"Salt, Kosher","cat":"Spices & Baking"},{"name":"Salt, Maldon","cat":"Spices & Baking"},{"name":"Salt, Table","cat":"Spices & Baking"},{"name":"Sugar","cat":"Spices & Baking"},{"name":"Sugar, Brown","cat":"Spices & Baking"},{"name":"Thyme","cat":"Spices & Baking"},{"name":"Turmeric","cat":"Spices & Baking"},{"name":"Vanilla Extract","cat":"Spices & Baking"},{"name":"Xantham Gum","cat":"Spices & Baking"},{"name":"Yeast","cat":"Spices & Baking"},{"name":"Artichoke","cat":"Vegetable"},{"name":"Asparagus","cat":"Vegetable"},{"name":"Avacado","cat":"Vegetable"},{"name":"Beets","cat":"Vegetable"},{"name":"Broccoli","cat":"Vegetable"},{"name":"Brussel Sprouts","cat":"Vegetable"},{"name":"Butternut squash","cat":"Vegetable"},{"name":"Cabbage, green","cat":"Vegetable"},{"name":"Cabbage, red","cat":"Vegetable"},{"name":"Carrots","cat":"Vegetable"},{"name":"Cauliflower","cat":"Vegetable"},{"name":"Celery","cat":"Vegetable"},{"name":"Chard","cat":"Vegetable"},{"name":"Chiles, Serrano","cat":"Vegetable"},{"name":"Chives","cat":"Vegetable"},{"name":"Collards","cat":"Vegetable"},{"name":"Corn","cat":"Vegetable"},{"name":"Cucumber","cat":"Vegetable"},{"name":"Eggplant","cat":"Vegetable"},{"name":"Garlic","cat":"Vegetable"},{"name":"Ginger","cat":"Vegetable"},{"name":"Green Onion","cat":"Vegetable"},{"name":"Green Pepper","cat":"Vegetable"},{"name":"Greens, Salad","cat":"Vegetable"},{"name":"Kale","cat":"Vegetable"},{"name":"Lettuce","cat":"Vegetable"},{"name":"Mushrooms","cat":"Vegetable"},{"name":"Onion","cat":"Vegetable"},{"name":"Peas","cat":"Vegetable"},{"name":"Potatoes","cat":"Vegetable"},{"name":"Red Onion","cat":"Vegetable"},{"name":"Scallions","cat":"Vegetable"},{"name":"Shallots","cat":"Vegetable"},{"name":"Spinach","cat":"Vegetable"},{"name":"Squash","cat":"Vegetable"},{"name":"Squash, Spaghetti","cat":"Vegetable"},{"name":"Sweet Potatoes","cat":"Vegetable"},{"name":"Tomatillos","cat":"Vegetable"},{"name":"Tomatoes","cat":"Vegetable"},{"name":"Tomatoes, Cherry","cat":"Vegetable"}]</script>
+<script>
+(() => {
+  'use strict';
+
+  const STORAGE_KEY = 'shoppingListState_v1';
+  const SEED = JSON.parse(document.getElementById('seedData').textContent);
+
+  // ---------- Utilities ----------
+  const $ = (sel, root = document) => root.querySelector(sel);
+  const $$ = (sel, root = document) => [...root.querySelectorAll(sel)];
+  const uid = () => 'itm_' + Math.random().toString(36).slice(2, 10);
+  const escapeHtml = (s) => s.replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+
+  // Category display order — known categories first, unknown appended alphabetically
+  const CAT_ORDER = [
+    'Fruit','Vegetable','Herbs','Meat','Dairy / Eggs','Baked Goods','Dry Goods',
+    'Spices & Baking','Condiments','Nuts / Seeds / Dried Fruit','Frozen','Drinks & Snacks','Housekeeping'
+  ];
+  const catRank = (c) => {
+    const i = CAT_ORDER.indexOf(c);
+    return i === -1 ? CAT_ORDER.length : i;
+  };
+
+  // ---------- State ----------
+  let state = load();
+  let view = 'pantry'; // 'pantry' | 'shop'
+  let editMode = false;
+  let searchQuery = '';
+  let editingId = null;
+
+  function defaultState() {
+    return {
+      version: 1,
+      items: SEED.map(s => ({ id: uid(), name: s.name, cat: s.cat, needed: false, bought: false }))
+    };
+  }
+  function load() {
+    try {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if (!raw) return defaultState();
+      const parsed = JSON.parse(raw);
+      if (!parsed || !Array.isArray(parsed.items)) return defaultState();
+      return parsed;
+    } catch {
+      return defaultState();
+    }
+  }
+  function save() {
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+    } catch (e) {
+      toast('Could not save — storage may be full');
+    }
+  }
+
+  // ---------- Rendering ----------
+  const main = $('#main');
+
+  function categoriesOf(items) {
+    const cats = [...new Set(items.map(i => i.cat))];
+    cats.sort((a, b) => {
+      const ra = catRank(a), rb = catRank(b);
+      if (ra !== rb) return ra - rb;
+      return a.localeCompare(b);
+    });
+    return cats;
+  }
+
+  function render() {
+    document.body.classList.toggle('edit-mode', editMode);
+
+    // Tab state
+    $$('.tab').forEach(t => t.classList.toggle('active', t.dataset.view === view));
+    $('#viewTitle').textContent = view === 'shop' ? 'Shopping List' : 'Pantry';
+    const neededCount = state.items.filter(i => i.needed).length;
+    const badge = $('#neededBadge');
+    badge.textContent = String(neededCount);
+    badge.classList.toggle('zero', neededCount === 0);
+
+    // Menu context
+    const bought = state.items.filter(i => i.needed && i.bought).length;
+    $('#checkedSub').textContent = bought ? String(bought) : '';
+
+    // Build list
+    if (view === 'pantry') renderPantry();
+    else renderShop();
+  }
+
+  function renderPantry() {
+    const q = searchQuery.trim().toLowerCase();
+    const filter = (i) => !q || i.name.toLowerCase().includes(q);
+    const items = state.items.filter(filter)
+      .slice()
+      .sort((a, b) => a.name.localeCompare(b.name, undefined, { sensitivity: 'base' }));
+
+    if (items.length === 0) {
+      main.innerHTML = `
+        <div class="empty">
+          <h2>No matches</h2>
+          <p>Try a different search, or tap <b>+</b> to add a new item.</p>
+        </div>`;
+      return;
+    }
+
+    const cats = categoriesOf(items);
+    let html = '';
+    for (const cat of cats) {
+      const group = items.filter(i => i.cat === cat);
+      if (!group.length) continue;
+      const neededInCat = group.filter(i => i.needed).length;
+      html += `
+        <section class="cat-group">
+          <div class="cat-header">
+            <span>${escapeHtml(cat)}</span>
+            <span class="count">${neededInCat ? neededInCat + ' / ' : ''}${group.length}</span>
+          </div>
+          <div class="list">
+            ${group.map(i => rowHtml(i, 'pantry')).join('')}
+          </div>
+        </section>`;
+    }
+    main.innerHTML = html;
+  }
+
+  function renderShop() {
+    const needed = state.items.filter(i => i.needed);
+    if (needed.length === 0) {
+      main.innerHTML = `
+        <div class="empty">
+          <h2>Shopping list is empty</h2>
+          <p>Switch to <b>Pantry</b> and tap items you need.</p>
+        </div>`;
+      return;
+    }
+
+    const boughtCount = needed.filter(i => i.bought).length;
+    const pct = Math.round((boughtCount / needed.length) * 100);
+    const cats = categoriesOf(needed);
+
+    let html = `
+      <div class="shop-summary">
+        <div>
+          <div style="font-weight:600;">${boughtCount} of ${needed.length} picked up</div>
+          <div class="progress-bar"><div class="progress-fill" style="width:${pct}%"></div></div>
+        </div>
+        ${boughtCount === needed.length
+          ? `<button class="btn-primary" id="finishShopBtn" style="padding:9px 14px; border-radius:10px;">Finish</button>`
+          : ''}
+      </div>`;
+    for (const cat of cats) {
+      const group = needed.filter(i => i.cat === cat)
+        .slice()
+        .sort((a, b) => {
+          // unbought first, then alphabetical
+          if (a.bought !== b.bought) return a.bought ? 1 : -1;
+          return a.name.localeCompare(b.name, undefined, { sensitivity: 'base' });
+        });
+      html += `
+        <section class="cat-group">
+          <div class="cat-header">
+            <span>${escapeHtml(cat)}</span>
+            <span class="count">${group.filter(i => !i.bought).length} left</span>
+          </div>
+          <div class="list">
+            ${group.map(i => rowHtml(i, 'shop')).join('')}
+          </div>
+        </section>`;
+    }
+    main.innerHTML = html;
+
+    const fin = $('#finishShopBtn');
+    if (fin) fin.addEventListener('click', finishShopping);
+  }
+
+  function rowHtml(item, mode) {
+    const classes = ['row'];
+    if (mode === 'pantry' && item.needed) classes.push('needed');
+    if (mode === 'shop' && item.bought) classes.push('bought');
+    return `
+      <div class="${classes.join(' ')}" data-id="${item.id}" data-mode="${mode}">
+        <div class="check" aria-hidden="true">
+          <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"></polyline></svg>
+        </div>
+        <div class="row-name">${escapeHtml(item.name)}</div>
+        <div class="row-actions">
+          <button class="edit" data-action="edit" aria-label="Edit ${escapeHtml(item.name)}">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>
+          </button>
+          <button class="delete" data-action="delete" aria-label="Delete ${escapeHtml(item.name)}">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><path d="m19 6-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg>
+          </button>
+        </div>
+      </div>`;
+  }
+
+  // ---------- Event delegation on list rows ----------
+  main.addEventListener('click', (e) => {
+    const actionBtn = e.target.closest('button[data-action]');
+    const row = e.target.closest('.row');
+    if (!row) return;
+    const id = row.dataset.id;
+    const item = state.items.find(i => i.id === id);
+    if (!item) return;
+
+    if (actionBtn) {
+      const action = actionBtn.dataset.action;
+      if (action === 'edit') { openSheet(item); return; }
+      if (action === 'delete') { confirmDelete(item); return; }
+      return;
+    }
+    if (editMode) { openSheet(item); return; }
+
+    const mode = row.dataset.mode;
+    if (mode === 'pantry') {
+      item.needed = !item.needed;
+      if (!item.needed) item.bought = false;
+    } else {
+      item.bought = !item.bought;
+    }
+    save();
+    render();
+  });
+
+  // ---------- Header controls ----------
+  $$('.tab').forEach(t => t.addEventListener('click', () => {
+    view = t.dataset.view;
+    render();
+    window.scrollTo({ top: 0 });
+  }));
+
+  const searchBtn = $('#searchBtn'), searchRow = $('#searchRow'),
+        searchInput = $('#searchInput'), searchClear = $('#searchClear');
+  searchBtn.addEventListener('click', () => {
+    const show = !searchRow.classList.contains('show');
+    searchRow.classList.toggle('show', show);
+    if (show) { setTimeout(() => searchInput.focus(), 50); }
+    else { searchInput.value = ''; searchQuery = ''; render(); }
+  });
+  searchInput.addEventListener('input', () => {
+    searchQuery = searchInput.value;
+    render();
+  });
+  searchClear.addEventListener('click', () => {
+    searchInput.value = ''; searchQuery = ''; searchInput.focus(); render();
+  });
+
+  // ---------- Menu ----------
+  const menu = $('#menu');
+  const menuBtn = $('#menuBtn');
+  menuBtn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    menu.classList.toggle('open');
+  });
+  document.addEventListener('click', (e) => {
+    if (!menu.contains(e.target) && e.target !== menuBtn) menu.classList.remove('open');
+  });
+
+  $('#editToggle').addEventListener('click', () => {
+    editMode = !editMode;
+    $('#editToggle span').textContent = editMode ? 'Done editing' : 'Edit items';
+    menu.classList.remove('open');
+    render();
+  });
+  $('#clearCheckedBtn').addEventListener('click', finishShopping);
+  $('#uncheckAllBtn').addEventListener('click', () => {
+    if (!state.items.some(i => i.needed)) { toast('Shopping list is already empty'); menu.classList.remove('open'); return; }
+    if (!confirm('Clear all items from the shopping list?')) return;
+    state.items.forEach(i => { i.needed = false; i.bought = false; });
+    save(); menu.classList.remove('open'); render();
+    toast('Shopping list cleared');
+  });
+  $('#exportBtn').addEventListener('click', () => {
+    const blob = new Blob([JSON.stringify(state, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    const stamp = new Date().toISOString().slice(0, 10);
+    a.href = url; a.download = `shopping-list-backup-${stamp}.json`;
+    document.body.appendChild(a); a.click();
+    setTimeout(() => { URL.revokeObjectURL(url); a.remove(); }, 100);
+    menu.classList.remove('open');
+  });
+  $('#importBtn').addEventListener('click', () => { $('#importFile').click(); });
+  $('#importFile').addEventListener('change', async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    try {
+      const text = await file.text();
+      const parsed = JSON.parse(text);
+      if (!parsed || !Array.isArray(parsed.items)) throw new Error('Bad format');
+      // Normalize
+      state = {
+        version: 1,
+        items: parsed.items.map(i => ({
+          id: i.id || uid(),
+          name: String(i.name || '').trim(),
+          cat: String(i.cat || 'Other').trim() || 'Other',
+          needed: !!i.needed,
+          bought: !!i.bought
+        })).filter(i => i.name)
+      };
+      save(); render();
+      toast(`Imported ${state.items.length} items`);
+    } catch (err) {
+      toast('Import failed — file not recognized');
+    } finally {
+      $('#importFile').value = '';
+      menu.classList.remove('open');
+    }
+  });
+  $('#resetBtn').addEventListener('click', () => {
+    if (!confirm('Reset the master list to the original Notion import? All custom items and checkmarks will be lost.')) return;
+    state = defaultState();
+    save(); menu.classList.remove('open'); render();
+    toast('Reset complete');
+  });
+
+  // ---------- Finish shopping ----------
+  function finishShopping() {
+    const bought = state.items.filter(i => i.needed && i.bought);
+    if (bought.length === 0) { toast('Nothing is checked off yet'); menu.classList.remove('open'); return; }
+    bought.forEach(i => { i.needed = false; i.bought = false; });
+    save(); menu.classList.remove('open'); render();
+    toast(`Removed ${bought.length} purchased item${bought.length === 1 ? '' : 's'}`);
+  }
+
+  // ---------- Add / edit item sheet ----------
+  const sheet = $('#sheet'), sheetBackdrop = $('#sheetBackdrop');
+  const itemName = $('#itemName'), itemCat = $('#itemCat');
+  const newCatField = $('#newCatField'), newCatInput = $('#newCatInput');
+
+  function openSheet(existing) {
+    editingId = existing ? existing.id : null;
+    $('#sheetTitle').textContent = existing ? 'Edit item' : 'Add item';
+    $('#sheetDeleteRow').style.display = existing ? 'flex' : 'none';
+
+    // Populate category dropdown
+    const cats = [...new Set(state.items.map(i => i.cat))].sort((a, b) => a.localeCompare(b));
+    cats.push('__new__');
+    itemCat.innerHTML = cats.map(c => {
+      const label = c === '__new__' ? '+ New category…' : c;
+      return `<option value="${escapeHtml(c)}">${escapeHtml(label)}</option>`;
+    }).join('');
+
+    if (existing) {
+      itemName.value = existing.name;
+      itemCat.value = existing.cat;
+    } else {
+      itemName.value = '';
+      itemCat.value = cats[0] || '__new__';
+    }
+    newCatField.style.display = itemCat.value === '__new__' ? 'flex' : 'none';
+    newCatInput.value = '';
+
+    sheetBackdrop.classList.add('open');
+    sheet.classList.add('open');
+    setTimeout(() => itemName.focus(), 150);
+  }
+  function closeSheet() {
+    sheetBackdrop.classList.remove('open');
+    sheet.classList.remove('open');
+    editingId = null;
+  }
+  itemCat.addEventListener('change', () => {
+    newCatField.style.display = itemCat.value === '__new__' ? 'flex' : 'none';
+    if (itemCat.value === '__new__') setTimeout(() => newCatInput.focus(), 50);
+  });
+  sheetBackdrop.addEventListener('click', closeSheet);
+  $('#sheetCancel').addEventListener('click', closeSheet);
+  $('#sheetSave').addEventListener('click', saveSheet);
+  itemName.addEventListener('keydown', (e) => { if (e.key === 'Enter') saveSheet(); });
+  newCatInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') saveSheet(); });
+  $('#sheetDelete').addEventListener('click', () => {
+    const item = state.items.find(i => i.id === editingId);
+    if (!item) return closeSheet();
+    confirmDelete(item, () => closeSheet());
+  });
+
+  function saveSheet() {
+    const name = itemName.value.trim();
+    if (!name) { itemName.focus(); return; }
+    let cat = itemCat.value;
+    if (cat === '__new__') {
+      cat = newCatInput.value.trim();
+      if (!cat) { newCatInput.focus(); return; }
+    }
+    if (editingId) {
+      const item = state.items.find(i => i.id === editingId);
+      if (item) { item.name = name; item.cat = cat; }
+    } else {
+      // Deduplicate: if name+cat exists, just toggle it needed instead
+      const existing = state.items.find(i => i.name.toLowerCase() === name.toLowerCase() && i.cat === cat);
+      if (existing) {
+        existing.needed = true;
+        toast('Already in list — marked as needed');
+      } else {
+        state.items.push({ id: uid(), name, cat, needed: view === 'shop', bought: false });
+      }
+    }
+    save(); closeSheet(); render();
+  }
+
+  function confirmDelete(item, after) {
+    if (!confirm(`Delete "${item.name}"? This only removes it from your master list.`)) return;
+    state.items = state.items.filter(i => i.id !== item.id);
+    save(); render();
+    toast(`Deleted ${item.name}`);
+    if (after) after();
+  }
+
+  // ---------- FAB ----------
+  $('#fab').addEventListener('click', () => openSheet(null));
+
+  // ---------- Toast ----------
+  let toastTimer;
+  function toast(msg) {
+    const t = $('#toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => t.classList.remove('show'), 2200);
+  }
+
+  // ---------- Boot ----------
+  save(); // ensures first-load state is persisted
+  render();
+})();
+</script>
+</body>
+</html>
