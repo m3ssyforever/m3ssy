@@ -39,10 +39,11 @@
 
   * { box-sizing: border-box; }
   html, body { margin: 0; padding: 0; }
+  html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
   body {
     background: var(--bg);
     color: var(--text);
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, system-ui, sans-serif;
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, "Helvetica Neue", Arial, system-ui, sans-serif;
     font-size: 17px;
     line-height: 1.4;
     -webkit-font-smoothing: antialiased;
@@ -113,6 +114,7 @@
     background: var(--surface-2);
     border-radius: 10px;
     outline: none;
+    font-size: 16px; /* 16px prevents iOS focus zoom */
   }
   .search-row input:focus { border-color: var(--accent); }
   .search-clear {
@@ -122,7 +124,7 @@
   }
 
   /* ---------- Content ---------- */
-  main { padding: 12px 10px 120px; max-width: 720px; margin: 0 auto; }
+  main { padding: 12px 10px 120px; max-width: 900px; margin: 0 auto; }
   .cat-group { margin-bottom: 14px; }
   .cat-header {
     display: flex; justify-content: space-between; align-items: baseline;
@@ -135,29 +137,35 @@
   }
   .cat-header .count { font-weight: 500; }
 
+  /* 2-column grid list. The 1px gap + background color forms the dividers. */
   .list {
-    background: var(--surface);
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1px;
+    background: var(--border);
     border: 1px solid var(--border);
     border-radius: var(--radius);
     overflow: hidden;
   }
+  @media (min-width: 640px) { .list { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+  @media (min-width: 900px) { .list { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
+
   .row {
-    display: flex; align-items: center; gap: 12px;
+    display: flex; align-items: center; gap: 10px;
     min-height: var(--row-h);
-    padding: 10px 14px;
-    border-top: 1px solid var(--border);
+    padding: 10px 12px;
+    background: var(--surface);
     user-select: none;
     -webkit-tap-highlight-color: transparent;
     transition: background .1s;
   }
-  .row:first-child { border-top: 0; }
   .row:active { background: var(--surface-2); }
   .row.needed { background: var(--accent-soft); }
   .row.needed:active { filter: brightness(.97); }
 
   .check {
-    flex: 0 0 24px;
-    width: 24px; height: 24px;
+    flex: 0 0 22px;
+    width: 22px; height: 22px;
     border-radius: 50%;
     border: 2px solid var(--border);
     background: transparent;
@@ -168,10 +176,22 @@
     background: var(--accent);
     border-color: var(--accent);
   }
-  .check svg { width: 14px; height: 14px; stroke: #fff; stroke-width: 3; fill: none; display: none; }
+  .check svg { width: 13px; height: 13px; stroke: #fff; stroke-width: 3; fill: none; display: none; }
   .row.needed .check svg { display: block; }
 
-  .row-name { flex: 1; font-size: 16px; }
+  .row-name {
+    flex: 1;
+    min-width: 0;
+    font-size: 16px;
+    line-height: 1.25;
+    /* Wrap long names up to 2 lines, then ellipsize */
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    overflow: hidden;
+    word-break: break-word;
+    overflow-wrap: anywhere;
+  }
   .row.bought .row-name { color: var(--muted); text-decoration: line-through; }
   .row.bought .check {
     background: var(--muted); border-color: var(--muted);
@@ -179,17 +199,22 @@
   .row.bought .check svg { display: block; }
 
   .row-actions {
-    display: flex; gap: 4px; opacity: 0;
+    display: flex; gap: 2px; opacity: 0;
+    pointer-events: none;
     transition: opacity .15s;
   }
-  body.edit-mode .row-actions { opacity: 1; }
+  body.edit-mode .row-actions { opacity: 1; pointer-events: auto; }
   .row-actions button {
-    width: 32px; height: 32px; border-radius: 8px;
+    width: 30px; height: 30px; border-radius: 8px;
     display: inline-flex; align-items: center; justify-content: center;
     color: var(--muted);
   }
   .row-actions button:hover { background: var(--surface-2); color: var(--text); }
   .row-actions .delete:hover { color: var(--danger); background: rgba(179,38,30,.08); }
+  /* On narrow screens in edit mode, hide the pencil — whole row still opens the sheet */
+  @media (max-width: 520px) {
+    body.edit-mode .row-actions .edit { display: none; }
+  }
 
   .empty {
     text-align: center; color: var(--muted);
@@ -269,6 +294,7 @@
     border-radius: 10px;
     background: var(--surface-2);
     outline: none;
+    font-size: 16px; /* 16px prevents iOS focus zoom */
   }
   .field input:focus, .field select:focus { border-color: var(--accent); }
   .sheet .buttons {
