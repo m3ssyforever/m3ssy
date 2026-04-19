@@ -184,13 +184,14 @@
     min-width: 0;
     font-size: 16px;
     line-height: 1.25;
-    /* Wrap long names up to 2 lines, then ellipsize */
+    /* Wrap long names up to 2 lines, then ellipsize.
+       overflow-wrap: break-word only splits when a word truly can't fit —
+       normal words stay intact and break on spaces/punctuation. */
     display: -webkit-box;
     -webkit-box-orient: vertical;
     -webkit-line-clamp: 2;
     overflow: hidden;
-    word-break: break-word;
-    overflow-wrap: anywhere;
+    overflow-wrap: break-word;
   }
   .row.bought .row-name { color: var(--muted); text-decoration: line-through; }
   .row.bought .check {
@@ -198,12 +199,13 @@
   }
   .row.bought .check svg { display: block; }
 
+  /* Action buttons take zero space unless edit mode is on — keeps the item
+     name readable in 2-column layout. */
   .row-actions {
-    display: flex; gap: 2px; opacity: 0;
-    pointer-events: none;
-    transition: opacity .15s;
+    display: none;
+    gap: 2px;
   }
-  body.edit-mode .row-actions { opacity: 1; pointer-events: auto; }
+  body.edit-mode .row-actions { display: flex; }
   .row-actions button {
     width: 30px; height: 30px; border-radius: 8px;
     display: inline-flex; align-items: center; justify-content: center;
