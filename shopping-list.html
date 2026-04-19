@@ -398,6 +398,9 @@
 
 <!-- Menu -->
 <div class="menu" id="menu">
+  <button id="shareBtn"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg> <span>Share with partner…</span><span class="sub" id="shareSub"></span></button>
+  <button id="syncStatusBtn" style="pointer-events:none"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.8 19A9 9 0 1 0 3 13.3"/><path d="M3 21v-5h5"/></svg> <span id="syncStatusText">Connecting…</span></button>
+  <hr>
   <button id="editToggle"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg> <span>Edit items</span></button>
   <hr>
   <button id="clearCheckedBtn"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><path d="m19 6-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg> <span>Finish shopping</span><span class="sub" id="checkedSub">0</span></button>
@@ -439,9 +442,71 @@
 <div class="toast" id="toast"></div>
 
 <script id="seedData" type="application/json">[{"name":"Bread","cat":"Baked Goods"},{"name":"Bread Crumbs","cat":"Baked Goods"},{"name":"Bread, GF","cat":"Baked Goods"},{"name":"Tortillas, corn","cat":"Baked Goods"},{"name":"Buttermilk","cat":"Condiments"},{"name":"Capers","cat":"Condiments"},{"name":"Chili Paste","cat":"Condiments"},{"name":"Dijon Mustard","cat":"Condiments"},{"name":"Fish Sauce","cat":"Condiments"},{"name":"Hot sauce","cat":"Condiments"},{"name":"Joseon (Korean soy sauce)","cat":"Condiments"},{"name":"Ketchup","cat":"Condiments"},{"name":"Liquid Aminos/Soy Sauce","cat":"Condiments"},{"name":"Maple Syrup","cat":"Condiments"},{"name":"Marmite","cat":"Condiments"},{"name":"Mayonnaise","cat":"Condiments"},{"name":"Oil, Acocado","cat":"Condiments"},{"name":"Oil, Olive","cat":"Condiments"},{"name":"Oil, Toasted Sesame","cat":"Condiments"},{"name":"Pesto","cat":"Condiments"},{"name":"Pickles","cat":"Condiments"},{"name":"Rice Vinegar, brown","cat":"Condiments"},{"name":"Soy sauce","cat":"Condiments"},{"name":"Tahini","cat":"Condiments"},{"name":"Tomato Paste","cat":"Condiments"},{"name":"Vinegar, Apple Cider","cat":"Condiments"},{"name":"Vinegar, Balsamaic","cat":"Condiments"},{"name":"Vinegar, Distilled","cat":"Condiments"},{"name":"Vinegar, Red Wine","cat":"Condiments"},{"name":"Vinegar, Rice","cat":"Condiments"},{"name":"Vinegar, White Wine","cat":"Condiments"},{"name":"Worcestershire","cat":"Condiments"},{"name":"Almond Milk","cat":"Dairy / Eggs"},{"name":"Butter","cat":"Dairy / Eggs"},{"name":"Cheddar Cheese","cat":"Dairy / Eggs"},{"name":"Cream","cat":"Dairy / Eggs"},{"name":"Eggs","cat":"Dairy / Eggs"},{"name":"Feta","cat":"Dairy / Eggs"},{"name":"Gruy\u00e8re","cat":"Dairy / Eggs"},{"name":"Milk","cat":"Dairy / Eggs"},{"name":"Mozzeralla","cat":"Dairy / Eggs"},{"name":"Parmesan Cheese","cat":"Dairy / Eggs"},{"name":"Pecarino","cat":"Dairy / Eggs"},{"name":"Queso Fresco","cat":"Dairy / Eggs"},{"name":"Ricotta","cat":"Dairy / Eggs"},{"name":"Yogurt","cat":"Dairy / Eggs"},{"name":"Apple Juice","cat":"Drinks & Snacks"},{"name":"Apple Sauce","cat":"Drinks & Snacks"},{"name":"Beer","cat":"Drinks & Snacks"},{"name":"Beer, GF","cat":"Drinks & Snacks"},{"name":"Chips","cat":"Drinks & Snacks"},{"name":"Cocunut Drink","cat":"Drinks & Snacks"},{"name":"Coffee","cat":"Drinks & Snacks"},{"name":"Orange Juice","cat":"Drinks & Snacks"},{"name":"Red Wine","cat":"Drinks & Snacks"},{"name":"Sake","cat":"Drinks & Snacks"},{"name":"Seltzer","cat":"Drinks & Snacks"},{"name":"Sherry","cat":"Drinks & Snacks"},{"name":"Tea, Black","cat":"Drinks & Snacks"},{"name":"Tea, Herbal","cat":"Drinks & Snacks"},{"name":"White Wine","cat":"Drinks & Snacks"},{"name":"Beans, Black","cat":"Dry Goods"},{"name":"Beans, Kidney","cat":"Dry Goods"},{"name":"Beans, Pinto","cat":"Dry Goods"},{"name":"Beans, White","cat":"Dry Goods"},{"name":"Blackeyed Peas","cat":"Dry Goods"},{"name":"Canned Tomatoes","cat":"Dry Goods"},{"name":"Chickpeas","cat":"Dry Goods"},{"name":"Chocolate","cat":"Dry Goods"},{"name":"Cocoa Powder","cat":"Dry Goods"},{"name":"Coconut, Milk","cat":"Dry Goods"},{"name":"Coconut, Shredded","cat":"Dry Goods"},{"name":"Corn Meal","cat":"Dry Goods"},{"name":"Grits","cat":"Dry Goods"},{"name":"Lasagna Noodles","cat":"Dry Goods"},{"name":"Lentils, Green","cat":"Dry Goods"},{"name":"Lentils, Red","cat":"Dry Goods"},{"name":"Oatmeal","cat":"Dry Goods"},{"name":"Pasta","cat":"Dry Goods"},{"name":"Pasta, GF","cat":"Dry Goods"},{"name":"Peanut Butter","cat":"Dry Goods"},{"name":"Quinoa","cat":"Dry Goods"},{"name":"Rice, Arborio","cat":"Dry Goods"},{"name":"Rice, Basmati","cat":"Dry Goods"},{"name":"Rice, Jasmine","cat":"Dry Goods"},{"name":"Sunflower Butter","cat":"Dry Goods"},{"name":"Berries","cat":"Frozen"},{"name":"Corn","cat":"Frozen"},{"name":"Peas","cat":"Frozen"},{"name":"Apples","cat":"Fruit"},{"name":"Bananas","cat":"Fruit"},{"name":"Blueberries","cat":"Fruit"},{"name":"Grapefruit","cat":"Fruit"},{"name":"Grapes","cat":"Fruit"},{"name":"Lemons","cat":"Fruit"},{"name":"Limes","cat":"Fruit"},{"name":"Olives","cat":"Fruit"},{"name":"Oranges","cat":"Fruit"},{"name":"Papaya","cat":"Fruit"},{"name":"Peaches","cat":"Fruit"},{"name":"Pears","cat":"Fruit"},{"name":"Plums","cat":"Fruit"},{"name":"Strawberries","cat":"Fruit"},{"name":"Cilantro","cat":"Herbs"},{"name":"Mint","cat":"Herbs"},{"name":"Parsley","cat":"Herbs"},{"name":"Rosemary","cat":"Herbs"},{"name":"Tarragon","cat":"Herbs"},{"name":"Body Wash","cat":"Housekeeping"},{"name":"Contact Solution","cat":"Housekeeping"},{"name":"Dental Floss","cat":"Housekeeping"},{"name":"Deodorant","cat":"Housekeeping"},{"name":"Dish Soap","cat":"Housekeeping"},{"name":"Dishwasher Detergent","cat":"Housekeeping"},{"name":"Freezer Bags, Gallon","cat":"Housekeeping"},{"name":"Freezer Bags, Quart","cat":"Housekeeping"},{"name":"Garbage Bags","cat":"Housekeeping"},{"name":"Hand Soap","cat":"Housekeeping"},{"name":"Laundry Detergent","cat":"Housekeeping"},{"name":"Paper Towels","cat":"Housekeeping"},{"name":"Sponges","cat":"Housekeeping"},{"name":"Sunscreen","cat":"Housekeeping"},{"name":"Surface Cleaner","cat":"Housekeeping"},{"name":"Swiffer, Dry","cat":"Housekeeping"},{"name":"Swiffer, Wet","cat":"Housekeeping"},{"name":"Toilet Cleaner","cat":"Housekeeping"},{"name":"Toilet Paper","cat":"Housekeeping"},{"name":"Toothpaste","cat":"Housekeeping"},{"name":"Anchovi","cat":"Meat"},{"name":"Bacon","cat":"Meat"},{"name":"Chicken Parts","cat":"Meat"},{"name":"Chicken, Whole","cat":"Meat"},{"name":"Cold cuts","cat":"Meat"},{"name":"Fish","cat":"Meat"},{"name":"Ground Beef","cat":"Meat"},{"name":"Ham","cat":"Meat"},{"name":"Mortadella","cat":"Meat"},{"name":"Pork","cat":"Meat"},{"name":"Salmon","cat":"Meat"},{"name":"Sausage","cat":"Meat"},{"name":"Tofu","cat":"Meat"},{"name":"Tuna","cat":"Meat"},{"name":"Turkey","cat":"Meat"},{"name":"Almonds","cat":"Nuts / Seeds / Dried Fruit"},{"name":"Cashews","cat":"Nuts / Seeds / Dried Fruit"},{"name":"Chia Seeds","cat":"Nuts / Seeds / Dried Fruit"},{"name":"Cranberries, Dried","cat":"Nuts / Seeds / Dried Fruit"},{"name":"Dates","cat":"Nuts / Seeds / Dried Fruit"},{"name":"Figs","cat":"Nuts / Seeds / Dried Fruit"},{"name":"Granola","cat":"Nuts / Seeds / Dried Fruit"},{"name":"Mango, Dried","cat":"Nuts / Seeds / Dried Fruit"},{"name":"Peanuts","cat":"Nuts / Seeds / Dried Fruit"},{"name":"Pecans","cat":"Nuts / Seeds / Dried Fruit"},{"name":"Pistachios.","cat":"Nuts / Seeds / Dried Fruit"},{"name":"Pumpkin Seeds","cat":"Nuts / Seeds / Dried Fruit"},{"name":"Raisins","cat":"Nuts / Seeds / Dried Fruit"},{"name":"Sesame Seeds","cat":"Nuts / Seeds / Dried Fruit"},{"name":"Sunflower Seeds","cat":"Nuts / Seeds / Dried Fruit"},{"name":"Walnuts","cat":"Nuts / Seeds / Dried Fruit"},{"name":"Allspice","cat":"Spices & Baking"},{"name":"Anise","cat":"Spices & Baking"},{"name":"Baking Powder","cat":"Spices & Baking"},{"name":"Baking Soda","cat":"Spices & Baking"},{"name":"Bay Leaves","cat":"Spices & Baking"},{"name":"Caraway seeds","cat":"Spices & Baking"},{"name":"Cardamom","cat":"Spices & Baking"},{"name":"Cayenne","cat":"Spices & Baking"},{"name":"Chicken Stock","cat":"Spices & Baking"},{"name":"Chickpea flour","cat":"Spices & Baking"},{"name":"Cinnamon","cat":"Spices & Baking"},{"name":"Cloves","cat":"Spices & Baking"},{"name":"Corn Starch","cat":"Spices & Baking"},{"name":"Corriander","cat":"Spices & Baking"},{"name":"Cumin, Whole","cat":"Spices & Baking"},{"name":"Curry","cat":"Spices & Baking"},{"name":"Fennel","cat":"Spices & Baking"},{"name":"Flour","cat":"Spices & Baking"},{"name":"Flour, Coconut","cat":"Spices & Baking"},{"name":"Flour, GF","cat":"Spices & Baking"},{"name":"Flour, Tapioca","cat":"Spices & Baking"},{"name":"Flour, White Rice","cat":"Spices & Baking"},{"name":"Gelatin","cat":"Spices & Baking"},{"name":"Ginger, Ground","cat":"Spices & Baking"},{"name":"Honey","cat":"Spices & Baking"},{"name":"Kosher Salt","cat":"Spices & Baking"},{"name":"Maseca","cat":"Spices & Baking"},{"name":"Mustard Seeds","cat":"Spices & Baking"},{"name":"Nutmeg","cat":"Spices & Baking"},{"name":"Oregano","cat":"Spices & Baking"},{"name":"PAN","cat":"Spices & Baking"},{"name":"Paprika","cat":"Spices & Baking"},{"name":"Paprika, Smoked","cat":"Spices & Baking"},{"name":"Pepper","cat":"Spices & Baking"},{"name":"Red Pepper Flakes","cat":"Spices & Baking"},{"name":"Salt, Kosher","cat":"Spices & Baking"},{"name":"Salt, Maldon","cat":"Spices & Baking"},{"name":"Salt, Table","cat":"Spices & Baking"},{"name":"Sugar","cat":"Spices & Baking"},{"name":"Sugar, Brown","cat":"Spices & Baking"},{"name":"Thyme","cat":"Spices & Baking"},{"name":"Turmeric","cat":"Spices & Baking"},{"name":"Vanilla Extract","cat":"Spices & Baking"},{"name":"Xantham Gum","cat":"Spices & Baking"},{"name":"Yeast","cat":"Spices & Baking"},{"name":"Artichoke","cat":"Vegetable"},{"name":"Asparagus","cat":"Vegetable"},{"name":"Avacado","cat":"Vegetable"},{"name":"Beets","cat":"Vegetable"},{"name":"Broccoli","cat":"Vegetable"},{"name":"Brussel Sprouts","cat":"Vegetable"},{"name":"Butternut squash","cat":"Vegetable"},{"name":"Cabbage, green","cat":"Vegetable"},{"name":"Cabbage, red","cat":"Vegetable"},{"name":"Carrots","cat":"Vegetable"},{"name":"Cauliflower","cat":"Vegetable"},{"name":"Celery","cat":"Vegetable"},{"name":"Chard","cat":"Vegetable"},{"name":"Chiles, Serrano","cat":"Vegetable"},{"name":"Chives","cat":"Vegetable"},{"name":"Collards","cat":"Vegetable"},{"name":"Corn","cat":"Vegetable"},{"name":"Cucumber","cat":"Vegetable"},{"name":"Eggplant","cat":"Vegetable"},{"name":"Garlic","cat":"Vegetable"},{"name":"Ginger","cat":"Vegetable"},{"name":"Green Onion","cat":"Vegetable"},{"name":"Green Pepper","cat":"Vegetable"},{"name":"Greens, Salad","cat":"Vegetable"},{"name":"Kale","cat":"Vegetable"},{"name":"Lettuce","cat":"Vegetable"},{"name":"Mushrooms","cat":"Vegetable"},{"name":"Onion","cat":"Vegetable"},{"name":"Peas","cat":"Vegetable"},{"name":"Potatoes","cat":"Vegetable"},{"name":"Red Onion","cat":"Vegetable"},{"name":"Scallions","cat":"Vegetable"},{"name":"Shallots","cat":"Vegetable"},{"name":"Spinach","cat":"Vegetable"},{"name":"Squash","cat":"Vegetable"},{"name":"Squash, Spaghetti","cat":"Vegetable"},{"name":"Sweet Potatoes","cat":"Vegetable"},{"name":"Tomatillos","cat":"Vegetable"},{"name":"Tomatoes","cat":"Vegetable"},{"name":"Tomatoes, Cherry","cat":"Vegetable"}]</script>
-<script>
-(() => {
+<script type="module">
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js';
+import {
+  initializeFirestore,
+  persistentLocalCache,
+  persistentMultipleTabManager,
+  doc,
+  setDoc,
+  onSnapshot,
+  serverTimestamp
+} from 'https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js';
+
+(async () => {
   'use strict';
+
+  // ---------- Firebase ----------
+  const firebaseConfig = {
+    apiKey: "AIzaSyCg-b13sTdv5XDm5kLRZYO4K7zuthwL0V0",
+    authDomain: "shopping-list-87b5d.firebaseapp.com",
+    projectId: "shopping-list-87b5d",
+    storageBucket: "shopping-list-87b5d.firebasestorage.app",
+    messagingSenderId: "992821670697",
+    appId: "1:992821670697:web:5b81530becfb56aa233d38"
+  };
+  const fbApp = initializeApp(firebaseConfig);
+  let db;
+  try {
+    db = initializeFirestore(fbApp, {
+      localCache: persistentLocalCache({ tabManager: persistentMultipleTabManager() })
+    });
+  } catch (e) {
+    // Fallback if persistence init fails (e.g. private browsing)
+    const { getFirestore } = await import('https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js');
+    db = getFirestore(fbApp);
+  }
+
+  // ---------- Share code / identity ----------
+  const CLIENT_KEY = 'shoppingListClientId_v1';
+  const SHARE_KEY  = 'shoppingListShareCode_v1';
+  const CLIENT_ID  = (() => {
+    let id = localStorage.getItem(CLIENT_KEY);
+    if (!id) { id = 'c_' + Math.random().toString(36).slice(2, 10); localStorage.setItem(CLIENT_KEY, id); }
+    return id;
+  })();
+  function generateShareCode() {
+    const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+    let out = '';
+    for (let i = 0; i < 6; i++) out += chars[Math.floor(Math.random() * chars.length)];
+    return out;
+  }
+  function readShareCode() {
+    const m = (location.hash || '').match(/(?:^#|[#&])sync=([A-Z0-9]+)/i);
+    if (m) { const c = m[1].toUpperCase(); localStorage.setItem(SHARE_KEY, c); return c; }
+    const stored = localStorage.getItem(SHARE_KEY);
+    if (stored) {
+      history.replaceState(null, '', location.pathname + location.search + `#sync=${stored}`);
+      return stored;
+    }
+    const code = generateShareCode();
+    localStorage.setItem(SHARE_KEY, code);
+    history.replaceState(null, '', location.pathname + location.search + `#sync=${code}`);
+    return code;
+  }
+  const shareCode = readShareCode();
+  const docRef = doc(db, 'lists', shareCode);
 
   const STORAGE_KEY = 'shoppingListState_v1';
   const SEED = JSON.parse(document.getElementById('seedData').textContent);
@@ -468,6 +533,8 @@
   let editMode = false;
   let searchQuery = '';
   let editingId = null;
+  let applyingRemote = false;   // don't re-push snapshot-applied state
+  let hasEverSynced = false;    // first onSnapshot fired?
 
   function defaultState() {
     return {
@@ -486,13 +553,92 @@
       return defaultState();
     }
   }
-  function save() {
+  function saveLocal() {
     try {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
     } catch (e) {
       toast('Could not save — storage may be full');
     }
   }
+  // Debounced remote write — avoids burning quota on rapid toggles
+  let syncTimer = null;
+  let pendingSync = false;
+  function queueSync() {
+    if (applyingRemote) return;
+    if (!hasEverSynced) { pendingSync = true; return; } // wait for first snapshot
+    if (syncTimer) clearTimeout(syncTimer);
+    syncTimer = setTimeout(doSync, 300);
+  }
+  async function doSync() {
+    syncTimer = null;
+    try {
+      await setDoc(docRef, {
+        version: state.version || 1,
+        items: state.items,
+        updatedBy: CLIENT_ID,
+        updatedAt: serverTimestamp()
+      });
+      setSyncStatus('synced');
+    } catch (e) {
+      console.error('sync failed', e);
+      setSyncStatus('offline');
+    }
+  }
+  function save() {
+    saveLocal();
+    queueSync();
+  }
+
+  // ---------- Real-time sync subscription ----------
+  function setSyncStatus(kind) {
+    const el = document.getElementById('syncStatusText');
+    if (!el) return;
+    if (kind === 'connecting') el.textContent = 'Connecting…';
+    else if (kind === 'synced') el.textContent = `Synced · code ${shareCode}`;
+    else if (kind === 'offline') el.textContent = 'Offline — will sync when online';
+  }
+  setSyncStatus('connecting');
+
+  onSnapshot(docRef, { includeMetadataChanges: false }, (snap) => {
+    const firstTime = !hasEverSynced;
+    hasEverSynced = true;
+    if (!snap.exists()) {
+      // No remote doc yet — seed it with our current state.
+      setSyncStatus('synced');
+      queueSync();
+      return;
+    }
+    const data = snap.data();
+    setSyncStatus('synced');
+    if (data.updatedBy === CLIENT_ID) {
+      // Our own write echoing back — no state change needed, but flush any
+      // changes queued while we were still waiting for the first snapshot.
+      if (pendingSync) { pendingSync = false; queueSync(); }
+      return;
+    }
+    if (!Array.isArray(data.items)) return;
+    applyingRemote = true;
+    state = {
+      version: Number(data.version) || 1,
+      items: data.items.map(i => ({
+        id: String(i.id || uid()),
+        name: String(i.name || '').trim(),
+        cat: String(i.cat || 'Other').trim() || 'Other',
+        needed: !!i.needed,
+        bought: !!i.bought
+      })).filter(i => i.name)
+    };
+    saveLocal();
+    render();
+    applyingRemote = false;
+    // If the user tapped anything between boot and this first snapshot, their
+    // changes were dropped when we overwrote state — that's a rare <500ms
+    // race; document via pendingSync that we'd otherwise have pushed.
+    if (firstTime) pendingSync = false;
+  }, (err) => {
+    console.error('onSnapshot error', err);
+    setSyncStatus('offline');
+  });
 
   // ---------- Rendering ----------
   const main = $('#main');
@@ -696,6 +842,26 @@
     if (!menu.contains(e.target) && e.target !== menuBtn) menu.classList.remove('open');
   });
 
+  $('#shareBtn').addEventListener('click', async () => {
+    const url = location.origin + location.pathname + `#sync=${shareCode}`;
+    menu.classList.remove('open');
+    try {
+      if (navigator.share) {
+        await navigator.share({ title: 'Shopping List', text: `Shared shopping list (code ${shareCode})`, url });
+      } else if (navigator.clipboard && navigator.clipboard.writeText) {
+        await navigator.clipboard.writeText(url);
+        toast('Link copied — send it to your partner');
+      } else {
+        prompt('Copy this link to share:', url);
+      }
+    } catch (e) {
+      if (e && e.name === 'AbortError') return; // user canceled share sheet
+      prompt('Copy this link to share:', url);
+    }
+  });
+  // Show the share code in the menu subtitle so it's easy to verify
+  document.getElementById('shareSub').textContent = shareCode;
+
   $('#editToggle').addEventListener('click', () => {
     editMode = !editMode;
     $('#editToggle span').textContent = editMode ? 'Done editing' : 'Edit items';
@@ -862,7 +1028,7 @@
   }
 
   // ---------- Boot ----------
-  save(); // ensures first-load state is persisted
+  saveLocal();   // persist seed locally; sync happens once onSnapshot fires
   render();
 })();
 </script>
