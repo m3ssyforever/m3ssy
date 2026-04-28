@@ -1,0 +1,25 @@
+// Paste this entire block into Firebase Console → Firestore → Rules,
+// then click Publish. Replaces the 30-day "test mode" rules.
+//
+// Security model: this app uses one fixed list ID. Anyone who opens your
+// page can read & write that one list. Everything else is rejected.
+// Good for a household; do NOT put anything sensitive in the list.
+
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // The single shared list — keep this in sync with LIST_ID in shopping-list.html.
+    match /lists/messy-forever-list-x7q3 {
+      allow read: if true;
+      allow write: if request.resource.data.keys().hasOnly(['version', 'items', 'updatedBy', 'updatedAt'])
+                   && request.resource.data.items is list
+                   && request.resource.data.items.size() <= 2000
+                   && request.resource.data.updatedBy is string
+                   && request.resource.data.updatedBy.size() <= 64;
+    }
+    // Everything else is locked.
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}
