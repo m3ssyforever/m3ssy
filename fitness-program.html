@@ -1,0 +1,1299 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#1f1f1f">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Strength">
+<title>Strength Program</title>
+<style>
+  :root {
+    --bg: #faf9f7;
+    --surface: #ffffff;
+    --surface-2: #f1efeb;
+    --text: #1f1f1f;
+    --muted: #6b6b6b;
+    --border: #e6e3dd;
+    --accent: #2e7d5b;
+    --accent-soft: #d8ece1;
+    --accent-2: #1e3a5f;
+    --warn: #b98907;
+    --danger: #b3261e;
+    --shadow: 0 1px 2px rgba(0,0,0,.04), 0 6px 20px rgba(0,0,0,.05);
+    --radius: 14px;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #151514;
+      --surface: #1f1f1e;
+      --surface-2: #262624;
+      --text: #eeecea;
+      --muted: #a09d98;
+      --border: #302f2d;
+      --accent: #5ec089;
+      --accent-soft: #234634;
+      --accent-2: #6fa3d1;
+      --warn: #d4a43c;
+      --danger: #e08079;
+      --shadow: 0 1px 2px rgba(0,0,0,.3), 0 6px 20px rgba(0,0,0,.35);
+    }
+  }
+
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
+  body {
+    background: var(--bg); color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, "Helvetica Neue", Arial, system-ui, sans-serif;
+    font-size: 16px; line-height: 1.45;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    padding-bottom: env(safe-area-inset-bottom);
+    overscroll-behavior-y: contain;
+  }
+  button { font: inherit; color: inherit; background: none; border: 0; cursor: pointer; }
+  input, select { font: inherit; color: inherit; }
+  a { color: var(--accent); }
+
+  /* ---------- Header ---------- */
+  header.app {
+    position: sticky; top: 0; z-index: 10;
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: calc(env(safe-area-inset-top) + 10px) 14px 8px;
+  }
+  .app-title {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 10px;
+  }
+  .app-title h1 { font-size: 19px; font-weight: 700; margin: 0; letter-spacing: -0.01em; }
+  .menu-btn {
+    width: 40px; height: 40px; border-radius: 10px;
+    display: inline-flex; align-items: center; justify-content: center;
+    color: var(--muted);
+  }
+  .menu-btn:hover { background: var(--surface-2); color: var(--text); }
+
+  .tabs {
+    display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 4px;
+    background: var(--surface-2); padding: 4px; border-radius: 12px;
+  }
+  .tab {
+    text-align: center; padding: 8px 6px; border-radius: 9px;
+    font-size: 13px; font-weight: 600; color: var(--muted);
+    transition: background .15s, color .15s;
+    line-height: 1.2;
+  }
+  .tab .tab-sub { display: block; font-size: 10px; font-weight: 500; opacity: .8; margin-top: 2px; }
+  .tab.active {
+    background: var(--surface); color: var(--text);
+    box-shadow: var(--shadow);
+  }
+
+  .day-pills {
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: 4px;
+    margin-top: 8px;
+    background: var(--surface-2); padding: 4px; border-radius: 12px;
+  }
+  .day-pill {
+    text-align: center; padding: 8px 4px; border-radius: 9px;
+    font-size: 13px; font-weight: 600; color: var(--muted);
+    transition: background .15s, color .15s;
+    line-height: 1.15;
+  }
+  .day-pill .day-sub { display: block; font-size: 10px; font-weight: 500; opacity: .75; margin-top: 2px; }
+  .day-pill.active { background: var(--accent); color: #fff; }
+  .day-pill .check { color: #fff; font-size: 11px; margin-left: 3px; }
+  .day-pill:not(.active) .check { color: var(--accent); }
+
+  /* ---------- Main ---------- */
+  main { padding: 12px 12px 80px; max-width: 760px; margin: 0 auto; }
+
+  .phase-intro {
+    background: var(--surface);
+    border: 1px solid var(--border); border-left: 4px solid var(--warn);
+    border-radius: var(--radius);
+    padding: 12px 14px; margin-bottom: 12px;
+    font-size: 14px; color: var(--text);
+  }
+  .phase-intro strong { color: var(--warn); }
+
+  .notice {
+    background: var(--surface);
+    border: 1px solid var(--border); border-left: 4px solid var(--danger);
+    border-radius: var(--radius);
+    padding: 12px 14px; margin-bottom: 12px;
+    font-size: 13px; color: var(--text);
+  }
+  .notice strong { color: var(--danger); }
+
+  .week-strip {
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px;
+    margin-bottom: 14px;
+  }
+  .week-cell {
+    text-align: center; padding: 10px 4px;
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 10px; cursor: pointer; user-select: none;
+    -webkit-tap-highlight-color: transparent;
+    font-size: 13px; font-weight: 600; color: var(--muted);
+  }
+  .week-cell:active { background: var(--surface-2); }
+  .week-cell .wk-sub { display: block; font-size: 11px; font-weight: 500; opacity: .8; margin-top: 2px; }
+  .week-cell.active { border-color: var(--accent-2); color: var(--text); }
+  .week-cell.done { background: var(--accent-soft); color: var(--text); border-color: transparent; }
+  .week-cell.done .wk-sub { color: var(--accent); }
+
+  .day-meta {
+    color: var(--muted); font-size: 13px; margin: 4px 0 12px;
+  }
+
+  .block { margin-bottom: 14px; }
+  .block-title {
+    color: var(--muted); font-size: 12px; letter-spacing: 0.08em;
+    text-transform: uppercase; font-weight: 700;
+    padding: 4px 6px 6px;
+    display: flex; justify-content: space-between; align-items: baseline;
+  }
+  .block-title .block-count { font-weight: 500; }
+
+  .ex-list {
+    background: var(--border);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+    display: grid; gap: 1px;
+  }
+
+  .ex-row {
+    display: flex; gap: 12px; padding: 12px 14px;
+    background: var(--surface);
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+    transition: background .12s;
+    align-items: flex-start;
+  }
+  .ex-row:active { background: var(--surface-2); }
+  .ex-row.done { background: var(--accent-soft); }
+  .ex-row .check {
+    flex: 0 0 22px; width: 22px; height: 22px;
+    border-radius: 50%; border: 2px solid var(--border);
+    background: transparent;
+    display: flex; align-items: center; justify-content: center;
+    margin-top: 2px;
+  }
+  .ex-row.done .check { background: var(--accent); border-color: var(--accent); }
+  .ex-row.done .check svg { display: block; }
+  .ex-row .check svg { width: 12px; height: 12px; stroke: #fff; stroke-width: 3; fill: none; display: none; }
+
+  .ex-body { flex: 1; min-width: 0; }
+  .ex-name { font-weight: 600; font-size: 16px; line-height: 1.3; }
+  .ex-sets { color: var(--accent-2); font-size: 13px; font-weight: 600; margin-top: 2px; }
+  .ex-desc { font-size: 13px; color: var(--muted); margin-top: 6px; line-height: 1.5; }
+  .ex-desc.collapsed {
+    display: -webkit-box; -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2; overflow: hidden;
+  }
+  .ex-desc .more {
+    color: var(--accent); font-weight: 600; cursor: pointer;
+    display: inline-block; margin-left: 4px;
+  }
+  .ex-cue { font-size: 13px; color: var(--muted); font-style: italic; margin-top: 4px; }
+
+  .session-footer {
+    display: flex; justify-content: space-between; align-items: center;
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: var(--radius); padding: 12px 14px;
+    margin-top: 16px;
+  }
+  .session-footer .left { font-size: 14px; color: var(--muted); }
+  .session-footer .left .num { font-weight: 700; color: var(--text); }
+  .session-footer button {
+    background: var(--accent); color: #fff;
+    padding: 10px 14px; border-radius: 10px;
+    font-weight: 600; font-size: 14px;
+  }
+  .session-footer button.undo {
+    background: var(--surface-2); color: var(--text);
+  }
+
+  /* ---------- Menu ---------- */
+  .menu {
+    position: absolute;
+    top: calc(env(safe-area-inset-top) + 50px);
+    right: 10px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    box-shadow: var(--shadow);
+    padding: 6px;
+    z-index: 40;
+    min-width: 240px;
+    display: none;
+  }
+  .menu.open { display: block; }
+  .menu button {
+    width: 100%; text-align: left;
+    padding: 10px 12px; border-radius: 8px;
+    font-size: 15px;
+    display: flex; align-items: center; gap: 10px;
+  }
+  .menu button:hover { background: var(--surface-2); }
+  .menu button .sub { color: var(--muted); font-size: 12px; margin-left: auto; }
+  .menu hr { border: 0; border-top: 1px solid var(--border); margin: 4px 0; }
+  .menu .icon { width: 18px; height: 18px; flex: 0 0 18px; color: var(--muted); }
+
+  /* ---------- Sheet ---------- */
+  .sheet-backdrop {
+    position: fixed; inset: 0;
+    background: rgba(0,0,0,.45); z-index: 30;
+    opacity: 0; pointer-events: none;
+    transition: opacity .2s;
+  }
+  .sheet-backdrop.open { opacity: 1; pointer-events: auto; }
+  .sheet {
+    position: fixed; left: 0; right: 0; bottom: 0;
+    background: var(--surface);
+    border-radius: 18px 18px 0 0;
+    padding: 14px 16px calc(20px + env(safe-area-inset-bottom));
+    z-index: 31;
+    transform: translateY(100%);
+    transition: transform .25s cubic-bezier(.2,.7,.2,1);
+    max-width: 720px; margin: 0 auto;
+    box-shadow: 0 -8px 28px rgba(0,0,0,.18);
+  }
+  .sheet.open { transform: translateY(0); }
+  .sheet-handle {
+    width: 36px; height: 4px; border-radius: 2px;
+    background: var(--border); margin: 0 auto 12px;
+  }
+  .sheet h3 { margin: 0 0 12px; font-size: 17px; }
+  .field { display: flex; flex-direction: column; gap: 6px; margin-bottom: 12px; }
+  .field label { font-size: 13px; color: var(--muted); }
+  .field input {
+    padding: 11px 12px; border: 1px solid var(--border);
+    border-radius: 10px; background: var(--surface-2);
+    outline: none; font-size: 16px;
+  }
+  .field input:focus { border-color: var(--accent); }
+  .weight-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; }
+  .progress-block {
+    background: var(--surface-2); border-radius: 10px; padding: 12px 14px;
+    margin-bottom: 12px; font-size: 14px;
+  }
+  .progress-block .row { display: flex; justify-content: space-between; margin-bottom: 4px; }
+  .progress-block .row .v { font-weight: 700; }
+  .progress-bar {
+    width: 100%; height: 6px; background: var(--border);
+    border-radius: 99px; overflow: hidden; margin-top: 6px;
+  }
+  .progress-fill { height: 100%; background: var(--accent); transition: width .3s; }
+  .sheet .buttons { display: flex; gap: 8px; margin-top: 4px; }
+  .sheet .buttons button {
+    flex: 1; padding: 12px; border-radius: 10px; font-weight: 600;
+  }
+  .btn-primary { background: var(--accent); color: #fff; }
+  .btn-ghost { background: var(--surface-2); color: var(--text); }
+  .btn-danger { background: var(--danger); color: #fff; }
+
+  .toast {
+    position: fixed; left: 50%;
+    bottom: calc(20px + env(safe-area-inset-bottom));
+    transform: translateX(-50%) translateY(20px);
+    background: var(--text); color: var(--surface);
+    padding: 10px 16px; border-radius: 99px;
+    font-size: 14px; box-shadow: var(--shadow);
+    opacity: 0; transition: opacity .2s, transform .2s;
+    z-index: 50; pointer-events: none; max-width: 90vw;
+  }
+  .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+  input[type=file] { display: none; }
+</style>
+</head>
+<body>
+
+<header class="app">
+  <div class="app-title">
+    <h1 id="appTitle">Strength · P1</h1>
+    <button class="menu-btn" id="menuBtn" aria-label="Menu">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><circle cx="5" cy="12" r="1.8"/><circle cx="12" cy="12" r="1.8"/><circle cx="19" cy="12" r="1.8"/></svg>
+    </button>
+  </div>
+  <nav class="tabs" id="phaseTabs" role="tablist"></nav>
+  <nav class="day-pills" id="dayPills"></nav>
+</header>
+
+<main id="main"></main>
+
+<!-- Menu -->
+<div class="menu" id="menu">
+  <button id="syncStatusBtn" style="pointer-events:none">
+    <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.8 19A9 9 0 1 0 3 13.3"/><path d="M3 21v-5h5"/></svg>
+    <span id="syncStatusText">Connecting…</span>
+  </button>
+  <hr>
+  <button id="weightBtn">
+    <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l2 2"/></svg>
+    <span>Weight tracking</span>
+    <span class="sub" id="weightSub"></span>
+  </button>
+  <button id="overviewBtn">
+    <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 9h6v6H9z"/></svg>
+    <span>Program overview</span>
+  </button>
+  <hr>
+  <button id="exportBtn">
+    <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="m7 10 5 5 5-5"/><path d="M12 15V3"/></svg>
+    <span>Export backup</span>
+  </button>
+  <button id="importBtn">
+    <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="m17 8-5-5-5 5"/><path d="M12 3v12"/></svg>
+    <span>Import backup</span>
+  </button>
+  <input type="file" id="importFile" accept=".json,application/json">
+  <hr>
+  <button id="resetBtn" style="color:var(--danger);">
+    <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/></svg>
+    <span>Reset all progress…</span>
+  </button>
+</div>
+
+<!-- Weight sheet -->
+<div class="sheet-backdrop" id="sheetBackdrop"></div>
+<div class="sheet" id="weightSheet">
+  <div class="sheet-handle"></div>
+  <h3>Weight tracking</h3>
+  <div class="progress-block">
+    <div class="row"><span>Lost so far</span><span class="v" id="weightLost">0 lb</span></div>
+    <div class="row"><span>To goal</span><span class="v" id="weightRemain">15 lb</span></div>
+    <div class="progress-bar"><div class="progress-fill" id="weightFill" style="width:0%"></div></div>
+  </div>
+  <div class="weight-grid">
+    <div class="field"><label>Start</label><input type="number" id="startWt" inputmode="decimal"></div>
+    <div class="field"><label>Current</label><input type="number" id="currWt" inputmode="decimal"></div>
+    <div class="field"><label>Goal</label><input type="number" id="goalWt" inputmode="decimal"></div>
+  </div>
+  <div class="buttons">
+    <button class="btn-ghost" id="weightCancel">Cancel</button>
+    <button class="btn-primary" id="weightSave">Save</button>
+  </div>
+</div>
+
+<!-- Overview sheet -->
+<div class="sheet" id="overviewSheet">
+  <div class="sheet-handle"></div>
+  <h3>Program overview</h3>
+  <div id="overviewBody" style="font-size:14px; line-height:1.55; max-height:60vh; overflow-y:auto; padding-bottom:8px;"></div>
+  <div class="buttons">
+    <button class="btn-ghost" id="overviewClose">Close</button>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script type="module">
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js';
+import {
+  initializeFirestore,
+  persistentLocalCache,
+  persistentMultipleTabManager,
+  doc, setDoc, onSnapshot, serverTimestamp
+} from 'https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js';
+
+(async () => {
+  'use strict';
+
+  // ========================================================================
+  // PROGRAM DATA — 3 phases × 4 days × 4 weeks
+  // Schedule: Mon (lower) · Tue (tai chi) · Thu (upper) · Sat (active)
+  // ========================================================================
+  const PROGRAM = {
+    phases: [
+      {
+        id: "p1",
+        name: "Phase 1 · Foundation",
+        weeks: "Weeks 1–4",
+        intro: "Goal: wake up the core, restore thoracic and hip mobility, and let your shoulder learn that strength training feels good. Loads are intentionally light — you're earning the right to add weight. RPE should sit at 5–6 out of 10.",
+        days: [
+          { name: "Lower body + core", when: "Monday", blocks: [
+            { title: "Warm-up (8 min)", items: [
+              { name: "Cat-cow", sets: "10 reps", cue: "Slow, breathe with the motion." },
+              { name: "World's greatest stretch", sets: "5/side", cue: "Open the chest at the top of each rep." },
+              { name: "Glute bridge", sets: "2 × 12", cue: "Squeeze, don't arch the low back." },
+              { name: "Dead bug", sets: "2 × 8/side", cue: "Press low back into the floor." }
+            ]},
+            { title: "Main strength (25 min)", items: [
+              { name: "Goblet squat", sets: "3 × 10", cue: "Light DB. Knees track over toes, chest tall." },
+              { name: "Romanian deadlift (DB)", sets: "3 × 10", cue: "Hinge, feel hamstrings. Stop above the knee." },
+              { name: "Step-up (low box)", sets: "2 × 8/leg", cue: "Drive through the heel of the up-foot." },
+              { name: "Bird dog", sets: "2 × 8/side", cue: "Slow tempo, ribs down." }
+            ]},
+            { title: "Core finisher (8 min)", items: [
+              { name: "Plank", sets: "3 × 20 sec", cue: "Knees down if hips sag." },
+              { name: "Side plank (knees bent)", sets: "2 × 15 sec/side", cue: "Stack hips, breathe." },
+              { name: "Pallof press (band)", sets: "2 × 10/side", cue: "Don't let the band twist you." }
+            ]},
+            { title: "Cooldown (5 min)", items: [
+              { name: "Pec doorway stretch", sets: "2 × 30 sec/side", cue: "Open chest — counters computer posture." },
+              { name: "Pigeon stretch", sets: "1 min/side", cue: "Hips, breathe." }
+            ]}
+          ]},
+          { name: "Tai chi + mobility", when: "Tuesday", blocks: [
+            { title: "Tai chi class (45 min)", items: [
+              { name: "Take any beginner tai chi or qigong class", sets: "1 class", cue: "If no class fits: do the Sun-style 8-form on YouTube — slow, mindful, weight-shift focused." }
+            ]},
+            { title: "Targeted mobility (10 min)", items: [
+              { name: "Thread the needle", sets: "8/side", cue: "Thoracic rotation — open the upper back." },
+              { name: "Chin tucks", sets: "2 × 10", cue: "Slide chin straight back, don't tilt down." },
+              { name: "90/90 hip switch", sets: "8 each direction", cue: "Slow, controlled." },
+              { name: "Wall slides", sets: "2 × 10", cue: "Back flat to wall, slide arms up only as far as control allows." }
+            ]},
+            { title: "Easy cardio (15 min — optional)", items: [
+              { name: "Walk or easy bike", sets: "15 min, conversational pace", cue: "Nose breathing if possible." }
+            ]}
+          ]},
+          { name: "Upper body + core (shoulder-safe)", when: "Thursday", blocks: [
+            { title: "Warm-up (8 min)", items: [
+              { name: "Band pull-apart", sets: "2 × 15", cue: "Squeeze shoulder blades, light band." },
+              { name: "Scapular wall slide", sets: "2 × 10", cue: "Forearms on wall, slide up & down with control." },
+              { name: "Cat-cow", sets: "10 reps", cue: "" }
+            ]},
+            { title: "Main strength (25 min) — no overhead", items: [
+              { name: "Incline push-up (bar at hip height)", sets: "3 × 8", cue: "Body straight, lower with control. Higher bar = easier." },
+              { name: "Chest-supported DB row", sets: "3 × 10", cue: "Elbow to hip, squeeze upper back. Stop if shoulder talks back." },
+              { name: "Half-kneeling single-arm landmine press (light)", sets: "2 × 8/side", cue: "Press at an angle — much friendlier than overhead." },
+              { name: "Face pull (cable or band)", sets: "3 × 12", cue: "Elbows high, pull to forehead level. Posture gold." }
+            ]},
+            { title: "Core finisher (8 min)", items: [
+              { name: "Dead bug", sets: "3 × 8/side", cue: "" },
+              { name: "Suitcase carry (one DB, walk 20 yds)", sets: "3 trips/side", cue: "Don't lean — anti-lateral-flexion core work." },
+              { name: "Hollow hold (bent knees)", sets: "3 × 15 sec", cue: "" }
+            ]},
+            { title: "Cooldown (5 min)", items: [
+              { name: "Doorway pec stretch", sets: "30 sec × 2", cue: "" },
+              { name: "Upper trap stretch", sets: "30 sec/side", cue: "Gentle." }
+            ]}
+          ]},
+          { name: "Active Saturday (pick one)", when: "Saturday", blocks: [
+            { title: "Option A — Pool (40 min)", items: [
+              { name: "Water walk forward/backward/sideways", sets: "5 min", cue: "Warm-up — chest-deep water." },
+              { name: "Easy freestyle or backstroke", sets: "10 × 25 yds, rest 30 sec between", cue: "Backstroke is great for your back posture. If freestyle bothers the shoulder, skip it." },
+              { name: "Kickboard front kick", sets: "4 × 25 yds", cue: "" },
+              { name: "Deep-water running (with belt if available)", sets: "5 min easy + 5 × 1 min faster / 1 min easy", cue: "Zero impact cardio that mimics running form." },
+              { name: "Pool stretches", sets: "5 min", cue: "Hold the wall, stretch quads/hips/calves." }
+            ]},
+            { title: "Option B — Jog & shoot (45 min)", items: [
+              { name: "Walk-jog intervals", sets: "5 min walk + 8 × (1 min jog / 2 min walk) + 5 min walk", cue: "Easing back into impact. At 200 lb your joints need a runway. If knees or shoulder talk, shorten the jog portion." },
+              { name: "Form shots (close range, no jumping)", sets: "50 makes", cue: "Stand 6–8 ft from the basket. All about touch, balance, and the elbow under the ball." },
+              { name: "Form layups (both sides)", sets: "20 each side", cue: "One-foot takeoff, soft off the glass. Right-handed layup on the right; left-handed on the left." },
+              { name: "Free throws", sets: "25 attempts", cue: "Same routine every shot. Notice your breathing." }
+            ]}
+          ]}
+        ]
+      },
+      {
+        id: "p2",
+        name: "Phase 2 · Build",
+        weeks: "Weeks 5–8",
+        intro: "Goal: add load, add asymmetry, raise the heart-rate ceiling. Strength sets get heavier (RPE 6–7). Core gets longer and more dynamic. Saturday adds intervals. Keep the shoulder-friendly substitutions and only progress overhead if you've been cleared.",
+        days: [
+          { name: "Lower body + core", when: "Monday", blocks: [
+            { title: "Warm-up (8 min)", items: [
+              { name: "World's greatest stretch", sets: "5/side", cue: "" },
+              { name: "Glute bridge → single-leg variation", sets: "2 × 8/side", cue: "" },
+              { name: "Goblet squat (light)", sets: "1 × 10", cue: "Movement prep." }
+            ]},
+            { title: "Main strength (30 min)", items: [
+              { name: "Goblet squat (heavier)", sets: "4 × 8", cue: "Add 5 lb every 2 weeks if form is clean." },
+              { name: "Trap-bar deadlift OR DB RDL", sets: "4 × 6", cue: "Trap-bar = back-friendly. Brace the core, drive the floor away." },
+              { name: "Reverse lunge (DB)", sets: "3 × 8/leg", cue: "Step long, keep torso tall." },
+              { name: "Hip thrust (bench + barbell or DB)", sets: "3 × 10", cue: "Chin tucked, ribs down at the top." }
+            ]},
+            { title: "Core (10 min)", items: [
+              { name: "Pallof press + rotation", sets: "3 × 10/side", cue: "" },
+              { name: "Side plank (full)", sets: "3 × 30 sec/side", cue: "Stack feet, hip high." },
+              { name: "Hanging knee raise (or lying leg raise)", sets: "3 × 8", cue: "Slow, no swing." }
+            ]},
+            { title: "Cooldown (5 min)", items: [
+              { name: "Pigeon + couch stretch", sets: "1 min/side each", cue: "" }
+            ]}
+          ]},
+          { name: "Tai chi + conditioning", when: "Tuesday", blocks: [
+            { title: "Tai chi practice (30 min)", items: [
+              { name: "Class or solo form", sets: "30 min", cue: "By week 5 you should have a short form you can run through without watching." }
+            ]},
+            { title: "Conditioning (20 min)", items: [
+              { name: "Bike or rower intervals", sets: "5 min easy + (1 min hard / 1 min easy) × 6 + 5 min easy", cue: "Hard = breathing heavy but able to say a short sentence. Build the engine." }
+            ]},
+            { title: "Mobility (5 min)", items: [
+              { name: "Thread the needle, 90/90, wall slides", sets: "Cycle through 2 rounds", cue: "" }
+            ]}
+          ]},
+          { name: "Upper body + core", when: "Thursday", blocks: [
+            { title: "Warm-up (8 min)", items: [
+              { name: "Band pull-apart, scap wall slide, prone Y-T-W", sets: "2 rounds, 10 each", cue: "Wakes up everything around the shoulder blade." }
+            ]},
+            { title: "Main strength (30 min)", items: [
+              { name: "Push-up (full or hands elevated)", sets: "4 × 8–10", cue: "Lower bar height as you get stronger. Progress to floor when 4 × 10 feels easy." },
+              { name: "1-arm DB row (knee on bench)", sets: "4 × 8/side", cue: "Pull with the elbow, squeeze upper back." },
+              { name: "Landmine press (standing, half-kneeling, or seated)", sets: "3 × 8/side", cue: "If the doctor clears overhead, add light DB overhead press here." },
+              { name: "Cable face pull + external rotation", sets: "3 × 12", cue: "" },
+              { name: "Farmer's carry (2 DB, 30 yds)", sets: "3 trips", cue: "Tall posture, grip hard." }
+            ]},
+            { title: "Core (10 min)", items: [
+              { name: "Plank with shoulder tap", sets: "3 × 10/side", cue: "Hips don't twist." },
+              { name: "Bird dog row (with light DB)", sets: "3 × 8/side", cue: "" },
+              { name: "Dead bug with band overhead", sets: "3 × 8/side", cue: "" }
+            ]}
+          ]},
+          { name: "Active Saturday (pick one)", when: "Saturday", blocks: [
+            { title: "Option A — Pool (45 min)", items: [
+              { name: "Warm-up swim (any stroke that feels good)", sets: "200 yds easy", cue: "" },
+              { name: "Swim intervals", sets: "8 × 50 yds with 30 sec rest", cue: "Build to 10 × 50 by end of phase. Alternate strokes." },
+              { name: "Deep-water running", sets: "10 × (1 min fast / 30 sec easy)", cue: "" },
+              { name: "Pool plyometrics", sets: "3 × 10 squat jumps in chest-deep water", cue: "Water absorbs impact — great for joint-friendly power work." },
+              { name: "Cool-down + stretch", sets: "5 min", cue: "" }
+            ]},
+            { title: "Option B — Jog & shoot (50 min)", items: [
+              { name: "Jog intervals", sets: "5 min walk + 4 × (5 min jog / 2 min walk) + 5 min walk", cue: "Building real running tolerance now. Conversational pace on the jog — if you can't talk, slow down." },
+              { name: "Spot shooting (5 spots)", sets: "10 shots per spot × 2 rounds", cue: "Pick 5 spots around the arc/elbow. Footwork matters — face the basket, balanced base, hold the follow-through." },
+              { name: "Form layups (both sides)", sets: "25 each side", cue: "Add a light dribble approach. Drive hard, finish soft." },
+              { name: "Free throws", sets: "50 attempts (sets of 10)", cue: "Routine. Same breath, same dip, same release." }
+            ]}
+          ]}
+        ]
+      },
+      {
+        id: "p3",
+        name: "Phase 3 · Performance",
+        weeks: "Weeks 9–12",
+        intro: "Goal: become an athlete again. Add lateral movement, light plyometrics, reactive core, and basketball-specific drills. You're building the ability to decelerate, change direction, and absorb load. RPE 7–8 on strength, but never on broken-down form.",
+        days: [
+          { name: "Lower body + power", when: "Monday", blocks: [
+            { title: "Warm-up (10 min)", items: [
+              { name: "Dynamic warm-up: leg swings, lunges, A-skips, side shuffle", sets: "2 rounds", cue: "Like a basketball warm-up." }
+            ]},
+            { title: "Power (10 min — fresh!)", items: [
+              { name: "Box jump (low box, step down)", sets: "4 × 4", cue: "Land soft, NEVER jump down. Step off." },
+              { name: "Med-ball slam", sets: "3 × 6", cue: "Full body, exhale on slam." }
+            ]},
+            { title: "Strength (20 min)", items: [
+              { name: "Trap-bar deadlift", sets: "4 × 5", cue: "Heavier — RPE 7." },
+              { name: "Bulgarian split squat (DB)", sets: "3 × 8/leg", cue: "Front shin vertical-ish, back leg working too." },
+              { name: "Lateral lunge (DB)", sets: "3 × 6/side", cue: "Hip mobility + adductor strength — basketball gold." }
+            ]},
+            { title: "Reactive core (10 min)", items: [
+              { name: "Med-ball rotational throw (against wall)", sets: "3 × 8/side", cue: "Power through the hips, not just arms." },
+              { name: "Pallof press (heavy band, hold + press)", sets: "3 × 8/side", cue: "" },
+              { name: "Plank to push-up", sets: "3 × 8", cue: "Anti-rotation." }
+            ]}
+          ]},
+          { name: "Tai chi + agility", when: "Tuesday", blocks: [
+            { title: "Tai chi (20 min)", items: [
+              { name: "Practice your form", sets: "20 min", cue: "Tai chi is the best secret strength move for balance & ankle stability." }
+            ]},
+            { title: "Agility (20 min)", items: [
+              { name: "Side shuffle (cone to cone, 5 yds)", sets: "8 × 30 sec, 30 sec rest", cue: "Stay low, no crossover." },
+              { name: "Cariocas", sets: "4 × 20 yds each direction", cue: "Hips loose." },
+              { name: "Defensive slide → backpedal → sprint", sets: "6 × 1 length of court", cue: "Basketball-specific change of direction." }
+            ]},
+            { title: "Mobility (10 min)", items: [
+              { name: "Thoracic + hip flow", sets: "2 rounds", cue: "Same favorites from earlier phases." }
+            ]}
+          ]},
+          { name: "Upper body + carries", when: "Thursday", blocks: [
+            { title: "Warm-up (8 min)", items: [
+              { name: "Band pull-aparts, face pulls, scap push-up", sets: "2 rounds, 10 each", cue: "" }
+            ]},
+            { title: "Strength (30 min)", items: [
+              { name: "DB bench press (flat or slight incline)", sets: "4 × 6", cue: "Only after shoulder is happy with pressing. Otherwise stay with push-ups." },
+              { name: "1-arm row (heavy)", sets: "4 × 6/side", cue: "Build the pull. Stronger upper back protects the shoulder." },
+              { name: "Pull-down or assisted pull-up", sets: "3 × 8", cue: "Wide-ish grip, full ROM." },
+              { name: "DB push press (light)", sets: "3 × 8", cue: "Use legs to help — friendlier than strict press. Skip if shoulder pain." }
+            ]},
+            { title: "Carries + core (10 min)", items: [
+              { name: "Farmer's carry (heavy, 40 yds)", sets: "4 trips", cue: "" },
+              { name: "Turkish get-up (light KB)", sets: "3 × 3/side", cue: "Skill move — go slow. Best full-body exercise for older athletes." },
+              { name: "Side plank with leg lift", sets: "3 × 8/side", cue: "" }
+            ]}
+          ]},
+          { name: "Athletic Saturday (pick one)", when: "Saturday", blocks: [
+            { title: "Option A — Jog & shoot (55 min)", items: [
+              { name: "Continuous jog", sets: "5 min walk warm-up + 20–25 min steady jog + 5 min walk cool-down", cue: "Real run now. Easy effort — nasal breathing if possible. Track your distance and slowly add 1–2 min per week." },
+              { name: "Catch-and-shoot off self-pass", sets: "30 makes from 3 spots", cue: "Toss yourself a pass off the dribble, square up, shoot. Game-like footwork." },
+              { name: "1-on-0 moves", sets: "20 reps (mix jab-step pull-ups, drives, step-backs)", cue: "Half speed at first — quality of footwork over speed." },
+              { name: "Free throws when tired (game simulation)", sets: "25 attempts after the run", cue: "Train shooting with elevated heart rate — that's what game free throws actually feel like." }
+            ]},
+            { title: "Option B — Pool athletic day (40 min)", items: [
+              { name: "Swim warm-up", sets: "200 yds", cue: "" },
+              { name: "Sprint intervals", sets: "10 × 25 yds fast, full rest", cue: "" },
+              { name: "Deep-water running w/ knee drives", sets: "8 × 30 sec hard / 30 sec easy", cue: "" },
+              { name: "Pool basketball moves: jump shot motion, defensive slides", sets: "10 min", cue: "Resistance training in disguise." }
+            ]},
+            { title: "Option C — Light basketball (45 min)", items: [
+              { name: "Shoot-around + dribble drills", sets: "15 min", cue: "Easy pace, find your shot." },
+              { name: "Form layups, jump shots, free throws", sets: "15 min", cue: "Volume on technique." },
+              { name: "Light 2-on-2 or 3-on-3 (half court)", sets: "15 min", cue: "If joints feel good. Stop before fatigue breaks form — that's where injuries live." }
+            ]}
+          ]}
+        ]
+      }
+    ]
+  };
+
+  // ========================================================================
+  // EXERCISE DESCRIPTIONS LIBRARY
+  // ========================================================================
+  const EXERCISE_LIB = {
+    "Cat-cow": "On hands and knees, wrists under shoulders and knees under hips. Inhale: drop the belly, lift the chest and tailbone (cow). Exhale: round the spine toward the ceiling, tuck the chin and tailbone (cat). Move slowly with breath. Lubricates the spine and gently mobilizes the thoracic area.",
+    "World's greatest stretch": "From a push-up position, step your right foot to the outside of your right hand. Drop the right elbow toward the floor for a second, then rotate the right arm up to the ceiling, opening the chest. Return and repeat the other side. Hits hips, hamstrings, T-spine, and shoulders.",
+    "Thread the needle": "Start on hands and knees. Slide your right arm under your left arm, lowering the right shoulder and ear toward the floor. Hold a breath or two, then reverse it by lifting the right arm up and back, opening the chest to the ceiling. Best thoracic rotation drill for desk-workers.",
+    "Chin tucks": "Sit or stand tall. Without tilting your head down, slide your chin straight back like you're making a double chin. Hold 2 seconds, release. You should feel a stretch at the base of the skull. Counters forward-head posture.",
+    "90/90 hip switch": "Sit on the floor with one leg bent 90° in front of you and the other bent 90° to the side. Keeping your chest tall, rotate both legs to the opposite side without using your hands. Slow and controlled — opens internal and external hip rotation.",
+    "Wall slides": "Stand with your back, head, and arms (bent at 90°, like a goalpost) flat against a wall. Slowly slide the arms up toward a Y position, keeping everything in contact with the wall. Stop where you lose contact.",
+    "Scapular wall slide": "Same setup as wall slides but focus on the shoulder blades drawing down and together as your arms slide up. Forearms stay on the wall the whole time. Trains rhomboids and lower traps.",
+    "Band pull-apart": "Hold a light resistance band in front of you at chest height, arms straight. Pull the band apart by squeezing your shoulder blades together until the band touches your chest. Slow return. Best exercise for the muscles that support your scapula.",
+    "Prone Y-T-W": "Lie face down with arms overhead in a Y. Lift the arms a few inches and squeeze. Lower, then make a T, lift and squeeze. Lower, then a W (elbows bent at sides, hands up), lift and squeeze. 8–10 of each = one round.",
+    "Glute bridge": "Lie on your back, knees bent, feet flat. Push through your heels and lift your hips until your body forms a straight line from knees to shoulders. Squeeze the glutes hard at the top — do not arch the low back.",
+    "Glute bridge → single-leg variation": "Same as a glute bridge, but extend one leg straight out. Drive through the planted heel to lift the hips. Hold a beat at the top.",
+    "Dead bug": "Lie on your back, arms straight up over the chest, hips and knees bent to 90°. Press your low back into the floor. Slowly lower the opposite arm and leg toward the floor without letting the low back lift. Return and switch sides.",
+    "Dead bug with band overhead": "Anchor a light band overhead and hold it with straight arms over your chest. Perform a dead bug while resisting the band's pull. Brutal core challenge despite looking like nothing.",
+    "Bird dog": "On hands and knees, extend the opposite arm and leg until they're parallel to the floor. Hold a beat, keeping your hips square to the ground (don't twist). Return and switch sides.",
+    "Bird dog row (with light DB)": "Set up like a bird dog with one hand on a bench and a light DB in the other. Extend the same-side leg back. From this stable position, row the DB to your hip. Forces the core to stay rock-solid while you pull.",
+    "Pec doorway stretch": "Stand in a doorway. Place your forearm on the door frame with elbow at shoulder height. Step forward gently until you feel a stretch across the chest and front shoulder. Hold 30 seconds, switch sides.",
+    "Doorway pec stretch": "See Pec doorway stretch.",
+    "Pigeon stretch": "From hands and knees, bring your right knee forward and place it behind your right wrist with the shin angled across. Extend your left leg straight back. Lower your chest toward the floor and breathe.",
+    "Upper trap stretch": "Sit tall. Place your right hand on the left side of your head. Gently pull your right ear toward your right shoulder. Hold 30 seconds. Switch sides.",
+    "Couch stretch": "Kneel with one shin against a wall or couch (toe pointed up). Step the other foot forward into a lunge. Squeeze the glute of the back leg and lift the torso tall. Stretches the hip flexor and quad.",
+    "Pigeon + couch stretch": "Alternate 1 min/side of Pigeon and 1 min/side of Couch stretch.",
+    "Scap push-up": "At the top of a push-up with arms locked out, let your shoulder blades come together (chest sinks slightly), then push them apart (chest lifts). Small range. Wakes up the serratus anterior.",
+
+    "Goblet squat": "Hold a single dumbbell vertically against your chest, both hands cupping under the top end. Squat down keeping the chest tall and knees tracking over the toes. Go as deep as you can with a neutral spine.",
+    "Goblet squat (heavier)": "Same form as the goblet squat, just heavier load. Should still finish each set with 1–2 reps in reserve.",
+    "Goblet squat (light)": "Light goblet squat used as warm-up to grease the movement before heavier work.",
+    "Romanian deadlift (DB)": "Hold a dumbbell in each hand at your thighs. Soft bend in the knees. Push your hips back while lowering the DBs along the front of your legs. Stop when you feel a strong hamstring stretch — usually around the knees.",
+    "Step-up (low box)": "Place one foot on a low box or bench (start below knee height). Drive through the heel of the up-foot to stand all the way up. Lower with control — don't let the down-foot crash.",
+    "Trap-bar deadlift": "Stand inside a trap (hex) bar. Hinge at the hips and grip the handles. Pull the slack out, brace the core, and stand up by driving the floor away. Far friendlier on the low back than a barbell deadlift.",
+    "Trap-bar deadlift OR DB RDL": "Pick one: trap-bar deadlift or DB Romanian deadlift. Both train the hip hinge.",
+    "Reverse lunge (DB)": "Hold a DB in each hand. Step one foot straight back into a lunge, lowering the back knee toward the floor. Keep the front shin mostly vertical and the torso tall. Drive through the front heel to return.",
+    "Hip thrust (bench + barbell or DB)": "Sit on the floor with your upper back against a bench, knees bent and feet flat. Rest a barbell or heavy DB across your hips (use a pad). Drive through the heels to lift your hips until your body is a straight line from knees to shoulders. Chin tucked, ribs down.",
+    "Bulgarian split squat (DB)": "Stand a few feet in front of a bench. Place the top of one foot on the bench behind you. Hold DBs at your sides. Lower into a lunge, keeping the front shin roughly vertical. Drive through the front heel to stand.",
+    "Lateral lunge (DB)": "Stand tall, holding a DB at your chest. Take a big step to the right, bending the right knee and pushing the hips back while the left leg stays straight. Push off the right foot to return. Trains lateral hip strength and adductor flexibility.",
+
+    "Incline push-up (bar at hip height)": "Place your hands on a bar, bench, or rack set at hip height. Walk your feet back to a plank position with your body in a straight line. Lower your chest to the bar, then push back up. Higher bar = easier.",
+    "Push-up (full or hands elevated)": "Standard push-up: body in a plank, hands under shoulders, lower the chest to the floor, press back up. If full reps break form, elevate the hands on a bench or bar to reduce the load.",
+    "Chest-supported DB row": "Set an incline bench to about 30–45°. Lie face down on it with a DB in each hand hanging straight down. Row both DBs to your hips, squeezing the shoulder blades together. Friendliest row variation for cranky scapulae.",
+    "1-arm DB row (knee on bench)": "Place one knee and the same-side hand on a bench. The other foot stays on the floor. Hold a DB in the free hand, let it hang. Row the DB to your hip, leading with the elbow.",
+    "1-arm row (heavy)": "Same form as the 1-arm DB row, just heavier. Drive your elbow back like you're starting a lawnmower. Stronger pulling muscles protect the shoulder long-term.",
+    "Half-kneeling single-arm landmine press (light)": "Wedge one end of a barbell into a corner or landmine attachment. Kneel on one knee facing the bar, holding the free end in the opposite hand at shoulder height. Press the bar up and slightly forward (not straight overhead). Far kinder to a sore shoulder.",
+    "Landmine press (standing, half-kneeling, or seated)": "Press the angled bar up and slightly forward. Vary the stance to add a balance or core demand. Always favor the angle that doesn't reproduce arm symptoms.",
+    "Face pull (cable or band)": "Set a cable or band at face height. Grab with both hands (palms down) and pull toward your forehead, splitting your hands apart so your knuckles point behind you. Elbows stay high. Best postural exercise.",
+    "Cable face pull + external rotation": "Same as face pull, but at the end of the pull, externally rotate your shoulders so your knuckles point straight up and back. Slow return.",
+    "DB bench press (flat or slight incline)": "Lie on a flat or low-incline bench with a DB in each hand at chest level, elbows around 45° from your body. Press the DBs up and slightly together until arms are straight. 45° elbow angle protects the shoulder.",
+    "Pull-down or assisted pull-up": "Lat-pulldown: grip wider than shoulders, pull the bar to your upper chest while driving your elbows down and back. Slow return. Or use an assisted pull-up machine.",
+    "DB push press (light)": "Stand holding DBs at the shoulders. Dip slightly at the knees and use the leg drive to help press the DBs overhead. Easier on the shoulders than a strict press. Skip if any overhead motion hurts.",
+
+    "Plank": "On forearms and toes with your body in one straight line. Squeeze the glutes, draw the ribs down toward the hips, and brace the core. Don't let the hips sag or pike up. Breathe normally.",
+    "Side plank (knees bent)": "Lie on your side with knees bent. Prop up on the bottom forearm, elbow under shoulder. Lift the hips so your body makes a straight line from knees to head.",
+    "Side plank (full)": "Same as bent-knee version but with legs straight, stacked, balancing on the bottom foot. Hips high, body straight.",
+    "Side plank with leg lift": "Hold a full side plank, then slowly lift and lower the top leg. Challenges side-core muscles plus glute medius.",
+    "Pallof press (band)": "Anchor a band at chest height. Stand sideways to the anchor, holding the band at your chest with both hands. Press the band straight out and resist the band's pull to rotate you. Anti-rotation core work.",
+    "Pallof press + rotation": "Same setup as Pallof press, but once your arms are extended, rotate your arms away from the anchor without letting your hips turn.",
+    "Pallof press (heavy band, hold + press)": "Heavier band. Press the band out and HOLD with arms extended for 5–10 seconds, then bring it back.",
+    "Suitcase carry (one DB, walk 20 yds)": "Pick up one heavy DB in one hand. Stand tall. Walk 20 yards without leaning toward the loaded side. Switch hands and walk back. Anti-lateral-flexion core work plus grip.",
+    "Farmer's carry (2 DB, 30 yds)": "Pick up a heavy DB in each hand. Stand tall, shoulders pulled back, chest open. Walk in a straight line. Grip the handles hard.",
+    "Farmer's carry (heavy, 40 yds)": "Same form, heavier load and longer distance. Aim for roughly half bodyweight per hand by week 12.",
+    "Hollow hold (bent knees)": "Lie on your back, low back pressed firmly into the floor. Bend the knees to 90° and float the feet a few inches off the ground. Reach the arms toward your knees. Hold.",
+    "Hollow hold": "Same as above but legs straight and arms reaching overhead. Low back stays glued to the floor — if it lifts, bend the knees.",
+    "Hanging knee raise (or lying leg raise)": "Hang from a pull-up bar. Without swinging, bring your knees up toward your chest with control. Lower slowly. Floor alternative: lie on your back and lift legs from floor to vertical.",
+    "Plank with shoulder tap": "Start in a high plank. Lift one hand and tap the opposite shoulder, then return. Alternate. Don't let your hips rock side to side.",
+    "Plank to push-up": "From forearm plank, push up to one hand at a time until in a high plank, then lower one elbow at a time back. Alternate which arm leads.",
+    "Med-ball slam": "Stand holding a slam ball overhead. Hinge at the hips and throw the ball into the ground as hard as you can. Catch on the bounce. Total-body power.",
+    "Med-ball rotational throw (against wall)": "Stand side-on to a wall, holding a med ball at your hip on the far side from the wall. Rotate explosively through the hips and throw the ball into the wall. Trains rotational power.",
+
+    "Box jump (low box, step down)": "Stand facing a low box (12–18 inches to start). Dip down, swing the arms, and jump up, landing softly. STEP DOWN — never jump down. Quality landings over box height.",
+    "Dynamic warm-up: leg swings, lunges, A-skips, side shuffle": "Move through each for ~20 yards: forward and lateral leg swings → walking lunges with a torso twist → A-skips (knee drive, opposite arm) → side shuffle.",
+    "Side shuffle (cone to cone, 5 yds)": "Athletic stance — feet wider than shoulders, knees bent, chest tall. Push off the outside foot and shuffle laterally without crossing your feet.",
+    "Cariocas": "Move sideways by crossing one foot in front of the other, then behind, in a continuous rhythm. Hips rotate, shoulders stay square.",
+    "Defensive slide → backpedal → sprint": "Cone triangle: defensive slide between cones 1 and 2, backpedal to cone 3, sprint forward to start.",
+    "Turkish get-up (light KB)": "Lie on your back holding a light KB straight up in one hand. Through 5–7 deliberate steps, stand up while keeping the weight overhead the entire time, then reverse to lie back down. Best full-body integration exercise for older athletes.",
+
+    "Water walk forward/backward/sideways": "Chest-deep water — walk forward 25 yds, backward 25 yds, sideways 25 yds each direction. Water resistance from all angles.",
+    "Easy freestyle or backstroke": "Easy pace. Backstroke is especially valuable for posture. If freestyle aggravates the shoulder, do all backstroke.",
+    "Kickboard front kick": "Hold a kickboard out front, arms straight, face out of the water. Kick from the hips (not the knees).",
+    "Deep-water running (with belt if available)": "Deep end with a flotation belt — run as if on land. Knees up, arms pumping. Form matters as much as effort. Zero impact.",
+    "Deep-water running": "Same as above. With or without belt.",
+    "Pool stretches": "Use the wall to hold quad, hamstring, hip-flexor, and calf stretches. Water makes balance easier.",
+    "Warm-up swim (any stroke that feels good)": "Easy continuous swimming — pick the stroke that feels best today.",
+    "Swim warm-up": "Easy continuous swim — pick the stroke that feels best.",
+    "Swim intervals": "Short distances with brief rest. Alternate strokes to spread the load.",
+    "Pool plyometrics": "Squat jumps in chest-deep water — squat, jump as high as you can, water absorbs landing.",
+    "Sprint intervals": "All-out swims for 25 yards with full rest between. Peak power.",
+    "Deep-water running w/ knee drives": "Same as deep-water running but exaggerate the knee drive. Alternate hard 30-sec bursts with easy recovery.",
+    "Pool basketball moves: jump shot motion, defensive slides": "Mime jump shots and defensive slides in chest-deep water. Resistance training in disguise.",
+    "Cool-down + stretch": "Easy swimming or floating, then pool-edge stretches.",
+
+    "Walk or easy bike": "Conversational pace — full sentences without getting winded. Gentle blood flow, not training.",
+    "Bike or rower intervals": "5 min easy warm-up. Alternate 1 min hard (breathing heavy, short phrases) with 1 min easy. Cool down 5 min easy.",
+
+    "Take any beginner tai chi or qigong class": "Tai chi trains balance, ankle stability, hip rotation, and breath control — directly transfers to athletic longevity. Tuesday class is your main one.",
+    "Class or solo form": "Tai chi class or run through your form solo. By Phase 2 you should know a short form well enough to practice without an instructor.",
+    "Practice your form": "By Phase 3 your tai chi should feel like a meditation. Slow, deep, balanced.",
+
+    "Shoot-around + dribble drills": "Stationary shots from your favorite spots, then dribble drills (between the legs, behind the back, crossover).",
+    "Form layups, jump shots, free throws": "Make 25 layups each side, 25 mid-range jump shots, 25 free throws. Consistent form.",
+    "Light 2-on-2 or 3-on-3 (half court)": "Half-court game with limited running. Stop when form breaks down — that's the injury zone.",
+    "Form shots (close range, no jumping)": "6–8 ft from the basket, directly in front. Proper form, no jump. Grooves the motion before adding distance.",
+    "Form layups (both sides)": "Approach the basket at an angle. Right side: drive off the left foot, lift the right knee, finish high off the glass. Reverse on the left.",
+    "Free throws": "Develop a routine — same dribbles, same breath, same release. Hold the follow-through until the ball hits the rim.",
+    "Free throws when tired (game simulation)": "Same form, but after a hard run when your legs are heavy. This is what game free throws feel like.",
+    "Spot shooting (5 spots)": "5 spots around the perimeter (left corner, left wing, top of key, right wing, right corner). Make a target from each.",
+    "Catch-and-shoot off self-pass": "12–15 ft from the basket. Toss the ball out with backspin, jog to catch on the rise, plant inside foot, square up, shoot.",
+    "1-on-0 moves": "Menu of moves without a defender: jab-step pull-up, drive-and-finish, step-back jumper, hesitation crossover. Half-speed first.",
+
+    "Walk-jog intervals": "Alternate short jog segments with longer walk recovery. Conversational pace on the jog. Walk segments are part of the training, not a failure. How to reintroduce impact at 200 lb without inflaming joints.",
+    "Jog intervals": "Longer jog segments (5+ min continuous) with shorter walk breaks. Conversational pace. Cardio engine is ready before joints — respect the joints.",
+    "Continuous jog": "Steady easy run, 20–25 min, no walk breaks. Nasal breathing = right pace. Add 1–2 min per week.",
+
+    "Thread the needle, 90/90, wall slides": "Cycle through the three drills. 8–10 reps each, 2 rounds total.",
+    "Band pull-aparts, face pulls, scap push-up": "Three shoulder-prep movements (see individual entries). 10 each, 2 rounds.",
+    "Band pull-apart, scap wall slide, prone Y-T-W": "Three shoulder/upper-back warm-up drills. 10 each, 2 rounds.",
+    "Thoracic + hip flow": "Favorite thoracic and hip mobility drills from earlier phases — thread the needle, 90/90, world's greatest stretch, wall slides. Two rounds, no rush."
+  };
+
+  // Day-of-week → day-index in PROGRAM (Mon=0, Tue=1, Thu=2, Sat=3)
+  const DAY_TO_INDEX = { 1: 0, 2: 1, 4: 2, 6: 3 };
+
+  function lookupDesc(name) {
+    if (EXERCISE_LIB[name]) return EXERCISE_LIB[name];
+    const stripped = name.replace(/\s*\(.+?\)\s*$/, "").trim();
+    return EXERCISE_LIB[stripped] || null;
+  }
+
+  // ========================================================================
+  // FIREBASE — same project as the shopping list; new collection.
+  // After deploying, update Firestore rules to allow /fitness/{listId}:
+  //   match /fitness/{listId} { allow read, write: if true; }
+  // ========================================================================
+  const firebaseConfig = {
+    apiKey: "AIzaSyCg-b13sTdv5XDm5kLRZYO4K7zuthwL0V0",
+    authDomain: "shopping-list-87b5d.firebaseapp.com",
+    projectId: "shopping-list-87b5d",
+    storageBucket: "shopping-list-87b5d.firebasestorage.app",
+    messagingSenderId: "992821670697",
+    appId: "1:992821670697:web:5b81530becfb56aa233d38"
+  };
+  const LIST_ID = 'messy-forever-fitness-x7q3';
+
+  const fbApp = initializeApp(firebaseConfig);
+  let db;
+  try {
+    db = initializeFirestore(fbApp, {
+      localCache: persistentLocalCache({ tabManager: persistentMultipleTabManager() })
+    });
+  } catch (e) {
+    const { getFirestore } = await import('https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js');
+    db = getFirestore(fbApp);
+  }
+
+  const CLIENT_KEY = 'fitnessClientId_v1';
+  const CLIENT_ID = (() => {
+    let id = localStorage.getItem(CLIENT_KEY);
+    if (!id) { id = 'c_' + Math.random().toString(36).slice(2, 10); localStorage.setItem(CLIENT_KEY, id); }
+    return id;
+  })();
+  const docRef = doc(db, 'fitness', LIST_ID);
+
+  // ========================================================================
+  // STATE
+  // ========================================================================
+  const STORAGE_KEY = 'fitnessState_v1';
+  const UI_KEY = 'fitnessUI_v1';
+
+  function defaultState() {
+    return {
+      version: 1,
+      weight: { start: 200, current: 200, goal: 185 },
+      sessions: {}  // key = `${phaseId}_d${dayIdx}_w${week}` -> { exercises: { [name]: true }, completed: bool }
+    };
+  }
+  function loadState() {
+    try {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if (!raw) return defaultState();
+      const p = JSON.parse(raw);
+      return Object.assign(defaultState(), p);
+    } catch { return defaultState(); }
+  }
+  function defaultUI() {
+    // Pick the day of week if it matches one of our training days
+    const today = new Date().getDay();
+    const dayIdx = DAY_TO_INDEX[today] ?? 0;
+    return { phaseIdx: 0, dayIdx, weekIdx: 1, expandedDesc: {} };
+  }
+  function loadUI() {
+    try {
+      const raw = localStorage.getItem(UI_KEY);
+      if (!raw) return defaultUI();
+      return Object.assign(defaultUI(), JSON.parse(raw));
+    } catch { return defaultUI(); }
+  }
+  function saveLocal() {
+    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); }
+    catch (e) { toast('Could not save — storage may be full'); }
+  }
+  function saveUI() {
+    try { localStorage.setItem(UI_KEY, JSON.stringify(ui)); } catch {}
+  }
+
+  let state = loadState();
+  let ui = loadUI();
+  let applyingRemote = false;
+  let hasEverSynced = false;
+  let pendingSync = false;
+  let syncTimer = null;
+
+  function queueSync() {
+    if (applyingRemote) return;
+    if (!hasEverSynced) { pendingSync = true; return; }
+    if (syncTimer) clearTimeout(syncTimer);
+    syncTimer = setTimeout(doSync, 300);
+  }
+  async function doSync() {
+    syncTimer = null;
+    try {
+      await setDoc(docRef, {
+        version: state.version || 1,
+        weight: state.weight,
+        sessions: state.sessions,
+        updatedBy: CLIENT_ID,
+        updatedAt: serverTimestamp()
+      });
+      setSyncStatus('synced');
+    } catch (e) {
+      console.error('sync failed', e);
+      setSyncStatus('offline');
+    }
+  }
+  function save() { saveLocal(); queueSync(); }
+
+  function setSyncStatus(kind) {
+    const el = document.getElementById('syncStatusText');
+    if (!el) return;
+    if (kind === 'connecting') el.textContent = 'Connecting…';
+    else if (kind === 'synced') el.textContent = 'Synced';
+    else if (kind === 'offline') el.textContent = 'Offline — will sync when online';
+  }
+  setSyncStatus('connecting');
+
+  onSnapshot(docRef, { includeMetadataChanges: false }, (snap) => {
+    hasEverSynced = true;
+    if (!snap.exists()) {
+      setSyncStatus('synced');
+      queueSync();  // seed remote with our local state
+      return;
+    }
+    const data = snap.data();
+    setSyncStatus('synced');
+    if (data.updatedBy === CLIENT_ID) {
+      if (pendingSync) { pendingSync = false; queueSync(); }
+      return;
+    }
+    applyingRemote = true;
+    state = {
+      version: Number(data.version) || 1,
+      weight: Object.assign({ start: 200, current: 200, goal: 185 }, data.weight || {}),
+      sessions: (data.sessions && typeof data.sessions === 'object') ? data.sessions : {}
+    };
+    saveLocal();
+    render();
+    applyingRemote = false;
+  }, (err) => {
+    console.error('onSnapshot error', err);
+    setSyncStatus('offline');
+  });
+
+  // ========================================================================
+  // RENDERING
+  // ========================================================================
+  const $ = (s, r = document) => r.querySelector(s);
+  const $$ = (s, r = document) => [...r.querySelectorAll(s)];
+  const escapeHtml = (s) => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+
+  function sessionKey(p = ui.phaseIdx, d = ui.dayIdx, w = ui.weekIdx) {
+    return `p${p}_d${d}_w${w}`;
+  }
+  function getSession(p, d, w) {
+    return state.sessions[sessionKey(p, d, w)] || { exercises: {}, completed: false };
+  }
+  function ensureSession(p, d, w) {
+    const k = sessionKey(p, d, w);
+    if (!state.sessions[k]) state.sessions[k] = { exercises: {}, completed: false };
+    return state.sessions[k];
+  }
+  function countDayExercises(phaseIdx, dayIdx) {
+    return PROGRAM.phases[phaseIdx].days[dayIdx].blocks.reduce((n, b) => n + b.items.length, 0);
+  }
+  function countDoneInSession(p, d, w) {
+    const s = getSession(p, d, w);
+    return Object.values(s.exercises).filter(Boolean).length;
+  }
+  function isSessionComplete(p, d, w) {
+    return getSession(p, d, w).completed === true;
+  }
+
+  function render() {
+    renderPhaseTabs();
+    renderDayPills();
+    renderMain();
+    renderTitle();
+    renderWeightSub();
+  }
+
+  function renderTitle() {
+    const p = PROGRAM.phases[ui.phaseIdx];
+    $('#appTitle').textContent = `Strength · ${p.name.split('·')[0].trim()}`;
+  }
+
+  function renderPhaseTabs() {
+    const el = $('#phaseTabs');
+    el.innerHTML = PROGRAM.phases.map((p, i) => {
+      const label = p.name.split('·')[1] ? p.name.split('·')[1].trim() : p.name;
+      return `<button class="tab ${i === ui.phaseIdx ? 'active' : ''}" data-p="${i}">
+        ${escapeHtml(label)}<span class="tab-sub">${escapeHtml(p.weeks)}</span>
+      </button>`;
+    }).join('');
+    el.onclick = (e) => {
+      const t = e.target.closest('.tab');
+      if (!t) return;
+      ui.phaseIdx = +t.dataset.p;
+      saveUI(); render();
+      window.scrollTo({ top: 0 });
+    };
+  }
+
+  function renderDayPills() {
+    const el = $('#dayPills');
+    const days = PROGRAM.phases[ui.phaseIdx].days;
+    el.innerHTML = days.map((d, i) => {
+      const dayName = d.when.slice(0, 3);
+      // Count weeks where session is complete for this day
+      let completed = 0;
+      for (let w = 1; w <= 4; w++) if (isSessionComplete(ui.phaseIdx, i, w)) completed++;
+      const checkMark = completed > 0 ? `<span class="check">${completed}/4</span>` : '';
+      return `<button class="day-pill ${i === ui.dayIdx ? 'active' : ''}" data-d="${i}">
+        ${dayName}${checkMark}<span class="day-sub">${escapeHtml(d.name.split('+')[0].trim().split('(')[0].trim().split(' ').slice(0,2).join(' '))}</span>
+      </button>`;
+    }).join('');
+    el.onclick = (e) => {
+      const t = e.target.closest('.day-pill');
+      if (!t) return;
+      ui.dayIdx = +t.dataset.d;
+      saveUI(); render();
+      window.scrollTo({ top: 0 });
+    };
+  }
+
+  function renderMain() {
+    const phase = PROGRAM.phases[ui.phaseIdx];
+    const day = phase.days[ui.dayIdx];
+    const main = $('#main');
+
+    const done = countDoneInSession(ui.phaseIdx, ui.dayIdx, ui.weekIdx);
+    const total = countDayExercises(ui.phaseIdx, ui.dayIdx);
+    const sessionDone = isSessionComplete(ui.phaseIdx, ui.dayIdx, ui.weekIdx);
+
+    let html = `
+      <div class="phase-intro">
+        <strong>${escapeHtml(phase.weeks)}</strong> — ${escapeHtml(phase.intro)}
+      </div>
+
+      <div class="week-strip">
+        ${[1,2,3,4].map(w => {
+          const active = w === ui.weekIdx;
+          const wDone = isSessionComplete(ui.phaseIdx, ui.dayIdx, w);
+          const wDoneCount = countDoneInSession(ui.phaseIdx, ui.dayIdx, w);
+          const wTotal = total;
+          return `<button class="week-cell ${active ? 'active' : ''} ${wDone ? 'done' : ''}" data-w="${w}">
+            Week ${w}<span class="wk-sub">${wDone ? '✓ done' : wDoneCount ? wDoneCount + '/' + wTotal : '—'}</span>
+          </button>`;
+        }).join('')}
+      </div>
+
+      <h2 style="margin:6px 6px 2px; font-size:18px;">${escapeHtml(day.name)}</h2>
+      <div class="day-meta">${escapeHtml(day.when)} · ${escapeHtml(phase.weeks)} · Week ${ui.weekIdx}</div>
+    `;
+
+    if (ui.phaseIdx === 0 && ui.weekIdx === 1 && ui.dayIdx === 0) {
+      html += `<div class="notice"><strong>Heads up:</strong> Right-scapula pain radiating into the arm deserves a one-time PT or sports-med evaluation before progressing past Phase 1. Stop any movement that reproduces the arm symptom.</div>`;
+    }
+
+    day.blocks.forEach((block, bi) => {
+      const blockTotal = block.items.length;
+      const blockDone = block.items.filter(it =>
+        getSession(ui.phaseIdx, ui.dayIdx, ui.weekIdx).exercises[it.name]
+      ).length;
+      html += `
+        <div class="block">
+          <div class="block-title">
+            <span>${escapeHtml(block.title)}</span>
+            <span class="block-count">${blockDone}/${blockTotal}</span>
+          </div>
+          <div class="ex-list">
+            ${block.items.map(it => exRowHtml(it, bi)).join('')}
+          </div>
+        </div>`;
+    });
+
+    html += `
+      <div class="session-footer">
+        <div class="left"><span class="num">${done}/${total}</span> exercises done${sessionDone ? ' · session ✓' : ''}</div>
+        <button class="${sessionDone ? 'undo' : ''}" id="completeBtn">${sessionDone ? 'Undo' : 'Mark session done'}</button>
+      </div>`;
+
+    main.innerHTML = html;
+
+    // Wire week strip
+    $('.week-strip').onclick = (e) => {
+      const t = e.target.closest('.week-cell');
+      if (!t) return;
+      ui.weekIdx = +t.dataset.w;
+      saveUI(); render();
+    };
+    // Wire complete button
+    $('#completeBtn').onclick = toggleSessionComplete;
+    // Wire description expand
+    $$('.ex-desc .more').forEach(el => {
+      el.onclick = (e) => {
+        e.stopPropagation();
+        const key = el.dataset.key;
+        ui.expandedDesc[key] = !ui.expandedDesc[key];
+        saveUI(); render();
+      };
+    });
+    // Wire row taps
+    $$('.ex-row').forEach(row => {
+      row.onclick = (e) => {
+        // Don't toggle if user tapped a "More" link
+        if (e.target.closest('.more')) return;
+        const name = row.dataset.name;
+        const sess = ensureSession(ui.phaseIdx, ui.dayIdx, ui.weekIdx);
+        sess.exercises[name] = !sess.exercises[name];
+        save(); render();
+      };
+    });
+  }
+
+  function exRowHtml(item, bi) {
+    const sess = getSession(ui.phaseIdx, ui.dayIdx, ui.weekIdx);
+    const done = !!sess.exercises[item.name];
+    const desc = lookupDesc(item.name);
+    const key = `${ui.phaseIdx}_${ui.dayIdx}_${bi}_${item.name}`;
+    const expanded = !!ui.expandedDesc[key];
+    const descHtml = desc ? `
+      <div class="ex-desc ${expanded ? '' : 'collapsed'}">
+        ${escapeHtml(desc)}${desc.length > 110 ? ` <span class="more" data-key="${escapeHtml(key)}">${expanded ? 'less' : 'more'}</span>` : ''}
+      </div>` : '';
+    const cueHtml = item.cue ? `<div class="ex-cue">${escapeHtml(item.cue)}</div>` : '';
+    return `
+      <div class="ex-row ${done ? 'done' : ''}" data-name="${escapeHtml(item.name)}">
+        <div class="check">
+          <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"></polyline></svg>
+        </div>
+        <div class="ex-body">
+          <div class="ex-name">${escapeHtml(item.name)}</div>
+          <div class="ex-sets">${escapeHtml(item.sets)}</div>
+          ${descHtml}
+          ${cueHtml}
+        </div>
+      </div>`;
+  }
+
+  function toggleSessionComplete() {
+    const sess = ensureSession(ui.phaseIdx, ui.dayIdx, ui.weekIdx);
+    sess.completed = !sess.completed;
+    if (sess.completed) {
+      // Mark every exercise as done too
+      const day = PROGRAM.phases[ui.phaseIdx].days[ui.dayIdx];
+      day.blocks.forEach(b => b.items.forEach(it => { sess.exercises[it.name] = true; }));
+      toast('Session marked complete');
+    } else {
+      toast('Session reopened');
+    }
+    save(); render();
+  }
+
+  // ========================================================================
+  // MENU
+  // ========================================================================
+  const menu = $('#menu');
+  $('#menuBtn').addEventListener('click', (e) => {
+    e.stopPropagation();
+    menu.classList.toggle('open');
+  });
+  document.addEventListener('click', (e) => {
+    if (!menu.contains(e.target) && !e.target.closest('#menuBtn')) menu.classList.remove('open');
+  });
+
+  function renderWeightSub() {
+    const lost = (state.weight.start - state.weight.current);
+    $('#weightSub').textContent = lost > 0 ? `−${lost} lb` : '';
+  }
+
+  // ========================================================================
+  // WEIGHT SHEET
+  // ========================================================================
+  const sheetBackdrop = $('#sheetBackdrop');
+  const weightSheet = $('#weightSheet');
+  const overviewSheet = $('#overviewSheet');
+
+  function openWeightSheet() {
+    $('#startWt').value = state.weight.start;
+    $('#currWt').value  = state.weight.current;
+    $('#goalWt').value  = state.weight.goal;
+    updateWeightDisplay();
+    menu.classList.remove('open');
+    sheetBackdrop.classList.add('open');
+    weightSheet.classList.add('open');
+  }
+  function closeSheets() {
+    sheetBackdrop.classList.remove('open');
+    weightSheet.classList.remove('open');
+    overviewSheet.classList.remove('open');
+  }
+  function updateWeightDisplay() {
+    const s = +$('#startWt').value || 0;
+    const c = +$('#currWt').value || 0;
+    const g = +$('#goalWt').value || 0;
+    const lost = Math.max(0, s - c);
+    const remain = Math.max(0, c - g);
+    $('#weightLost').textContent = `${lost} lb`;
+    $('#weightRemain').textContent = `${remain} lb`;
+    const total = Math.max(1, s - g);
+    const pct = Math.min(100, Math.round((lost / total) * 100));
+    $('#weightFill').style.width = pct + '%';
+  }
+  ['startWt','currWt','goalWt'].forEach(id => $('#'+id).addEventListener('input', updateWeightDisplay));
+  $('#weightBtn').addEventListener('click', openWeightSheet);
+  $('#weightCancel').addEventListener('click', closeSheets);
+  sheetBackdrop.addEventListener('click', closeSheets);
+  $('#weightSave').addEventListener('click', () => {
+    state.weight.start   = +$('#startWt').value || state.weight.start;
+    state.weight.current = +$('#currWt').value  || state.weight.current;
+    state.weight.goal    = +$('#goalWt').value  || state.weight.goal;
+    save(); renderWeightSub(); closeSheets();
+    toast('Weight saved');
+  });
+
+  // ========================================================================
+  // OVERVIEW SHEET
+  // ========================================================================
+  function openOverview() {
+    let totalSessions = 0, completedSessions = 0;
+    for (let p = 0; p < PROGRAM.phases.length; p++) {
+      for (let d = 0; d < PROGRAM.phases[p].days.length; d++) {
+        for (let w = 1; w <= 4; w++) {
+          totalSessions++;
+          if (isSessionComplete(p, d, w)) completedSessions++;
+        }
+      }
+    }
+    let html = `<p style="margin:0 0 12px;"><strong>${completedSessions} of ${totalSessions}</strong> total sessions complete across the 12-week program.</p>`;
+    PROGRAM.phases.forEach((p, pi) => {
+      let phaseDone = 0;
+      for (let d = 0; d < p.days.length; d++) for (let w = 1; w <= 4; w++) if (isSessionComplete(pi, d, w)) phaseDone++;
+      html += `<div style="margin-bottom:14px;">
+        <strong>${escapeHtml(p.name)}</strong> · ${phaseDone}/16
+        <div style="margin-top:6px; font-size:13px; color:var(--muted);">${escapeHtml(p.intro)}</div>
+        <div style="margin-top:8px; display:grid; grid-template-columns: 60px 1fr 1fr 1fr 1fr; gap:4px; font-size:12px;">
+          <div></div>
+          ${[1,2,3,4].map(w => `<div style="text-align:center; color:var(--muted);">W${w}</div>`).join('')}
+          ${p.days.map((d, di) => {
+            const dn = d.when.slice(0,3);
+            return `<div style="color:var(--muted);">${dn}</div>` + [1,2,3,4].map(w => {
+              const done = isSessionComplete(pi, di, w);
+              const partial = countDoneInSession(pi, di, w) > 0;
+              return `<div style="text-align:center; padding:4px; border-radius:4px;
+                background:${done ? 'var(--accent)' : partial ? 'var(--accent-soft)' : 'var(--surface-2)'};
+                color:${done ? '#fff' : 'var(--muted)'};">
+                ${done ? '✓' : partial ? '·' : ''}
+              </div>`;
+            }).join('');
+          }).join('')}
+        </div>
+      </div>`;
+    });
+    $('#overviewBody').innerHTML = html;
+    menu.classList.remove('open');
+    sheetBackdrop.classList.add('open');
+    overviewSheet.classList.add('open');
+  }
+  $('#overviewBtn').addEventListener('click', openOverview);
+  $('#overviewClose').addEventListener('click', closeSheets);
+
+  // ========================================================================
+  // EXPORT / IMPORT / RESET
+  // ========================================================================
+  $('#exportBtn').addEventListener('click', () => {
+    const blob = new Blob([JSON.stringify(state, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    const stamp = new Date().toISOString().slice(0, 10);
+    a.href = url; a.download = `strength-program-backup-${stamp}.json`;
+    document.body.appendChild(a); a.click();
+    setTimeout(() => { URL.revokeObjectURL(url); a.remove(); }, 100);
+    menu.classList.remove('open');
+  });
+  $('#importBtn').addEventListener('click', () => $('#importFile').click());
+  $('#importFile').addEventListener('change', async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    try {
+      const parsed = JSON.parse(await file.text());
+      if (!parsed.weight || !parsed.sessions) throw new Error('bad');
+      state = {
+        version: 1,
+        weight: Object.assign({ start: 200, current: 200, goal: 185 }, parsed.weight),
+        sessions: parsed.sessions || {}
+      };
+      save(); render();
+      toast('Backup imported');
+    } catch {
+      toast('Import failed — not a valid backup');
+    } finally {
+      $('#importFile').value = '';
+      menu.classList.remove('open');
+    }
+  });
+  $('#resetBtn').addEventListener('click', () => {
+    if (!confirm('Reset all session check-offs and weight tracking? This cannot be undone.')) return;
+    state = defaultState();
+    save(); render();
+    menu.classList.remove('open');
+    toast('All progress reset');
+  });
+
+  // ========================================================================
+  // TOAST
+  // ========================================================================
+  let toastTimer;
+  function toast(msg) {
+    const t = $('#toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => t.classList.remove('show'), 2200);
+  }
+
+  // ========================================================================
+  // BOOT
+  // ========================================================================
+  saveLocal();
+  render();
+})();
+</script>
+</body>
+</html>
